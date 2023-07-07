@@ -1,0 +1,153 @@
+.App {
+   width: 100%;
+   height: 100%;
+   max-width: 768px;
+   margin: 0 auto;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 32px;
+
+   .title {
+      margin-bottom: 32px;
+   }
+}
+
+.table {
+   position: relative;
+   width: 100%;
+   height: 600px;
+   overflow-y: auto;
+   border: 1px solid gray;
+   border-radius: 12px;
+   table {
+      width: 100%;
+      border-collapse: collapse;
+      th,
+      td {
+         border: 1px solid;
+      }
+      th,
+      td {
+         padding: 8px;
+         text-align: center;
+      }
+
+      th {
+         button {
+            margin: 0 auto;
+         }
+      }
+      td {
+         .actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+         }
+      }
+   }
+   button.fab {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 10;
+      color: white;
+   }
+}
+
+button {
+   border: none;
+   cursor: pointer;
+   background-color: transparent;
+}
+
+button.action {
+   line-height: 1;
+   height: 36px;
+   padding-inline: 10px;
+   font-weight: 600;
+   border-radius: 12px;
+   color: white !important;
+}
+
+button.add-action {
+   background-color: green;
+   &:hover {
+      background-color: darkgreen;
+   }
+}
+
+button.edit-action {
+   background-color: dodgerblue;
+   &:hover {
+      background-color: royalblue;
+   }
+}
+
+button.delete-action {
+   background-color: red;
+   &:hover {
+      background-color: darkred;
+   }
+}
+
+.ReactModal__Overlay {
+   z-index: 99;
+}
+
+.ReactModal__Content {
+   width: 400px;
+   border-radius: 12px !important;
+   //height: 400px;
+
+   form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .modal-header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+      }
+      .modal-content {
+         display: flex;
+         flex-direction: column;
+         gap: 8px;
+         .form-group {
+            input {
+               background-color: transparent;
+               border: 1px solid gray;
+               padding: 8px 16px;
+               font-size: 16px;
+               border-radius: 12px;
+               width: 100%;
+            }
+            &.form-group-error {
+               input {
+                  border: 1px solid red;
+               }
+            }
+            .error-text {
+               color: red;
+               margin-top: 4px;
+               margin-left: 16px;
+               &:first-letter {
+                  text-transform: uppercase;
+               }
+            }
+         }
+      }
+      .modal-footer {
+         display: flex;
+         align-items: center;
+
+         button.action {
+            width: 100%;
+         }
+      }
+   }
+}
