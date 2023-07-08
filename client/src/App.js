@@ -3,7 +3,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-q
 import { deleteAllUsers, deleteUser, getUsers } from './api/users.api';
 import AddUserModal from './modals/AddUserModal';
 import EditUserModal from './modals/EditUserModal';
-import { API_KEY } from './constants';
+import { API_KEY, DATE_CELL_FORMAT } from './constants';
 import { Confirm } from 'notiflix';
 import dayjs from 'dayjs';
 import { combineValues } from './utils';
@@ -62,6 +62,26 @@ function App() {
       },
    });
 
+   const onToggleRow = ({ isChecked, userId }) => {
+      // add to list
+      if (isChecked) {
+         setSelectedRowIds(prev => [...prev, userId]);
+      } else {
+         // remove from list
+         setSelectedRowIds(prev => prev.filter(id => id !== userId));
+      }
+   };
+
+   const onToggleAllRow = isChecked => {
+      // add list
+      if (isChecked) {
+         setSelectedRowIds(pages.map(d => d._id));
+      } else {
+         // remove list
+         setSelectedRowIds([]);
+      }
+   };
+
    const onDeleteUser = userId => {
       Confirm.show('Delete User', 'Are you sure you want to delete this user?', 'Yes', 'No', () => {
          mutateDeleteUser(userId);
@@ -90,15 +110,7 @@ function App() {
                               type='checkbox'
                               checked={pages.length !== 0 && selectedRowIds.length === pages.length}
                               disabled={pages.length === 0}
-                              onChange={e => {
-                                 // add list
-                                 if (e.target.checked) {
-                                    setSelectedRowIds(pages.map(d => d._id));
-                                 } else {
-                                    // remove list
-                                    setSelectedRowIds([]);
-                                 }
-                              }}
+                              onChange={e => onToggleAllRow(e.target.checked)}
                            />
                         </th>
                         <th>Name</th>
@@ -119,7 +131,7 @@ function App() {
                                  title='Delete all users'
                                  className='action delete-action'
                                  disabled={selectedRowIds.length === 0}
-                                 onClick={() => onDeleteAllUsers(selectedRowIds)}
+                                 onClick={e => onDeleteAllUsers(selectedRowIds)}
                               >
                                  <i className='material-icons'>delete_forever</i>
                               </button>
@@ -139,26 +151,18 @@ function App() {
                               <input
                                  type='checkbox'
                                  checked={selectedRowIds.some(id => id === user._id)}
-                                 onChange={e => {
-                                    // add to list
-                                    if (e.target.checked) {
-                                       setSelectedRowIds(prev => [...prev, user._id]);
-                                    } else {
-                                       // remove from list
-                                       setSelectedRowIds(prev => prev.filter(id => id !== user._id));
-                                    }
-                                 }}
+                                 onChange={e => onToggleRow({ isChecked: e.target.checked, userId: user._id })}
                               />
                            </td>
                            <td>{user.name}</td>
                            <td>{user.surname}</td>
-                           <td>{dayjs(user.dateOfBirth).format('DD MMMM YYYY')}</td>
+                           <td>{dayjs(user.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
                            <td>{user.age}</td>
                            <td>
                               <div className='actions'>
                                  <button
                                     title='Edit user'
-                                    onClick={() => setEditUserModal(user._id)}
+                                    onClick={e => setEditUserModal(user._id)}
                                     className='action edit-action'
                                     disabled={
                                        selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== user._id)
@@ -168,7 +172,7 @@ function App() {
                                  </button>
                                  <button
                                     title='Delete user'
-                                    onClick={() => onDeleteUser(user._id)}
+                                    onClick={e => onDeleteUser(user._id)}
                                     className='action delete-action'
                                     disabled={
                                        selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== user._id)
