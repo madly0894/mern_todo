@@ -4,42 +4,32 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Modal from 'react-modal';
 import Input from '../components/Input';
 import { API_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { deleteUser, editUser, getUserById } from '../api/users.api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { editUser, getUserById } from '../api/users.api';
 import { defaultValues, validateSchema } from './AddUserModal';
-import { Block, Loading } from 'notiflix';
 import dayjs from 'dayjs';
 
 const EditUserModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
-   const { control, reset, setError, handleSubmit, formState } = useForm({
+   const { control, reset, setError, handleSubmit } = useForm({
       defaultValues,
       resolver: yupResolver(validateSchema),
    });
 
-   const { mutate: mutateGetUserById } = useMutation({
+   const { mutate: mutateGetUserById, isLoading: isLoadingGetUserById } = useMutation({
       mutationFn: getUserById,
-      onMutate: () => {
-         Block.hourglass('.ReactModal__Content', 'Please wait...');
-      },
-      onSuccess: ({ data }) => {
+      onSuccess: data => {
          reset({
             ...data,
             dateOfBirth: dayjs(data.dateOfBirth).format(DATE_FORMAT),
          });
       },
-      onSettled: () => {
-         Block.remove('.ReactModal__Content');
-      },
    });
 
-   const { mutate: mutateEditUser, isLoading } = useMutation({
+   const { mutate: mutateEditUser, isLoading: isLoadingEditUser } = useMutation({
       mutationFn: editUser,
-      onMutate: () => {
-         Block.hourglass('.ReactModal__Content', 'Please wait...');
-      },
-      onError: (error, variables, context) => {
+      onError: error => {
          error.response.data?.errors.forEach(err => {
             setError(err.path, {
                message: err.msg,
@@ -48,11 +38,8 @@ const EditUserModal = ({ show, onHide }) => {
       },
       onSuccess: () => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         queryClient.invalidateQueries({ queryKey: [API_KEY, show] });
          onHide();
-      },
-      onSettled: () => {
-         Block.remove('.ReactModal__Content');
       },
    });
 
@@ -65,12 +52,12 @@ const EditUserModal = ({ show, onHide }) => {
          style={{
             content: MODAL_CONTENT_STYLE,
          }}
-         shouldCloseOnOverlayClick={!isLoading}
+         shouldCloseOnOverlayClick={!isLoadingEditUser || isLoadingGetUserById}
       >
          <form onSubmit={handleSubmit(validateValues => mutateEditUser({ id: show, body: validateValues }))}>
             <div className='modal-header'>
                <h2>Edit user</h2>
-               <button type='button' className='close-action' onClick={onHide} disabled={isLoading}>
+               <button type='button' className='close-action' onClick={onHide}>
                   <i className='material-icons'>clear</i>
                </button>
             </div>
@@ -82,7 +69,7 @@ const EditUserModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-footer'>
-               <button className='action edit-action' type='submit' disabled={isLoading}>
+               <button className='action edit-action' type='submit'>
                   Update
                </button>
             </div>

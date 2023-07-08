@@ -19,7 +19,7 @@ export const validateSchema = yup.object().shape({
 export const defaultValues = {
    name: '',
    surname: '',
-   dateOfBirth: dayjs().format(DATE_FORMAT),
+   dateOfBirth: dayjs('2005-').format(DATE_FORMAT),
 };
 
 const AddUserModal = ({ show, onHide }) => {
@@ -30,25 +30,20 @@ const AddUserModal = ({ show, onHide }) => {
       resolver: yupResolver(validateSchema),
    });
 
-   const { mutate: mutateAddUser, isLoading } = useMutation({
+   const { mutate: mutateAddUser, isLoading: isLoadingAddUser } = useMutation({
       mutationFn: addUser,
-      onMutate: () => {
-         Block.hourglass('.ReactModal__Content', 'Please wait...');
-      },
-      onError: (error, variables, context) => {
+      onError: error => {
          error.response.data?.errors.forEach(err => {
             setError(err.path, {
                message: err.msg,
             });
          });
       },
-      onSuccess: () => {
+      onSuccess: body => {
          // Invalidate and refetch
          queryClient.invalidateQueries({ queryKey: [API_KEY] });
          onHide();
-      },
-      onSettled: () => {
-         Block.remove('.ReactModal__Content');
+         reset(defaultValues);
       },
    });
 
@@ -57,18 +52,18 @@ const AddUserModal = ({ show, onHide }) => {
          isOpen={show}
          onRequestClose={() => {
             onHide();
-            reset();
+            reset(defaultValues);
          }}
          contentLabel='Add User'
          style={{
             content: MODAL_CONTENT_STYLE,
          }}
-         shouldCloseOnOverlayClick={!isLoading}
+         shouldCloseOnOverlayClick={!isLoadingAddUser}
       >
          <form onSubmit={handleSubmit(mutateAddUser)}>
             <div className='modal-header'>
                <h2>Add user</h2>
-               <button type='button' className='close-action' onClick={onHide} disabled={isLoading}>
+               <button type='button' className='close-action' onClick={onHide}>
                   <i className='material-icons'>clear</i>
                </button>
             </div>
@@ -80,7 +75,7 @@ const AddUserModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-footer'>
-               <button className='action add-action' type='submit' disabled={isLoading}>
+               <button className='action add-action' type='submit'>
                   Add
                </button>
             </div>
