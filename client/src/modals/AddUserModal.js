@@ -75,7 +75,7 @@ const AddUserModal = ({ show, onHide }) => {
                   control={control}
                   placeholder='Date of birth'
                   min={dayjs(getOwnYear(35)).format(DATE_FORMAT)}
-                  // max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
+                  max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
                   helperText='Birth date must be between 18 and 35 years ago'
                />
             </div>
