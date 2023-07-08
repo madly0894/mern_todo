@@ -22,7 +22,7 @@ export const defaultValues = {
    dateOfBirth: dayjs(getOwnYear(18)).format(DATE_FORMAT),
 };
 
-const AddUserModal = ({ show, onHide }) => {
+const AddUserModal = ({ show, onHide, refetch }) => {
    const queryClient = useQueryClient();
 
    const { control, reset, setError, handleSubmit, formState } = useForm({
@@ -41,7 +41,10 @@ const AddUserModal = ({ show, onHide }) => {
       },
       onSuccess: () => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         // queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         refetch({
+            refetchPage: (lastPage, index, allPages) => index === 0,
+         });
          onHide();
       },
    });

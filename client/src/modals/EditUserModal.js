@@ -4,13 +4,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Modal from 'react-modal';
 import Input from '../components/Input';
 import { API_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { editUser, getUserById } from '../api/users.api';
 import { defaultValues, validateSchema } from './AddUserModal';
 import dayjs from 'dayjs';
 import { getOwnYear } from '../utils';
 
-const EditUserModal = ({ show, onHide }) => {
+const EditUserModal = ({ show, onHide, refetch }) => {
    const queryClient = useQueryClient();
 
    const { control, reset, setError, handleSubmit } = useForm({
@@ -37,9 +37,15 @@ const EditUserModal = ({ show, onHide }) => {
             });
          });
       },
-      onSuccess: () => {
+      onSuccess: (data, variables, context) => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [API_KEY, show] });
+         // queryClient.invalidateQueries({ queryKey: [API_KEY, show] });
+         refetch({
+            refetchPage: (lastPage, index, allPages) => {
+               const findIndex = allPages.findIndex(ev => ev.data.some(e => e._id === variables.id));
+               return index === findIndex;
+            },
+         });
          onHide();
       },
    });

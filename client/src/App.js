@@ -21,6 +21,7 @@ function App() {
       fetchNextPage,
       hasNextPage,
       isFetchingNextPage,
+      refetch,
    } = useInfiniteQuery({
       queryKey: [API_KEY],
       queryFn: getUsers,
@@ -32,9 +33,15 @@ function App() {
 
    const { mutate: mutateDeleteUser } = useMutation({
       mutationFn: deleteUser,
-      onSuccess: () => {
+      onSuccess: (data, variables, context) => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         refetch({
+            refetchPage: (lastPage, index, allPages) => {
+               const findIndex = allPages.findIndex(ev => ev.data.some(e => e._id === variables));
+               return index === findIndex;
+            },
+         });
+         // queryClient.invalidateQueries({ queryKey: [API_KEY] });
          setSelectedRowIds([]);
       },
    });
@@ -189,8 +196,8 @@ function App() {
             </div>
          </div>
 
-         <AddUserModal show={addUserModal} onHide={() => setAddUserModal(false)} />
-         <EditUserModal show={editUserModal} onHide={() => setEditUserModal(false)} />
+         <AddUserModal show={addUserModal} onHide={() => setAddUserModal(false)} refetch={refetch} />
+         <EditUserModal show={editUserModal} onHide={() => setEditUserModal(false)} refetch={refetch} />
       </div>
    );
 }

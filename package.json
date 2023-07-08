@@ -7,7 +7,7 @@
       "start": "node app.js",
       "server": "nodemon app.js",
       "client": "yarn --cwd client start",
-      "client-install": "concurrently \"yarn install\" \"yarn install --cwd client\"",
+      "client-install": "yarn install --cwd client",
       "dev": "concurrently \"yarn run server\" \"yarn run client\""
    },
    "dependencies": {
