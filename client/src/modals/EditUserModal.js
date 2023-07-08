@@ -10,7 +10,7 @@ import { defaultValues, validateSchema } from './AddUserModal';
 import dayjs from 'dayjs';
 import { getOwnYear } from '../utils';
 
-const EditUserModal = ({ show, onHide, refetch }) => {
+const EditUserModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
    const { control, reset, setError, handleSubmit } = useForm({

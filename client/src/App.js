@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { deleteAllUsers, deleteUser, getUsers } from './api/users.api';
 import AddUserModal from './modals/AddUserModal';
 import EditUserModal from './modals/EditUserModal';
@@ -21,7 +21,6 @@ function App() {
       fetchNextPage,
       hasNextPage,
       isFetchingNextPage,
-      refetch,
    } = useInfiniteQuery({
       queryKey: [API_KEY],
       queryFn: getUsers,
@@ -192,8 +191,8 @@ function App() {
             </div>
          </div>
 
-         <AddUserModal show={addUserModal} onHide={() => setAddUserModal(false)} refetch={refetch} />
-         <EditUserModal show={editUserModal} onHide={() => setEditUserModal(false)} refetch={refetch} />
+         <AddUserModal show={addUserModal} onHide={() => setAddUserModal(false)} />
+         <EditUserModal show={editUserModal} onHide={() => setEditUserModal(false)} />
       </div>
    );
 }

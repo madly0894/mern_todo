@@ -22,7 +22,7 @@ export const defaultValues = {
    dateOfBirth: dayjs(getOwnYear(18)).format(DATE_FORMAT),
 };
 
-const AddUserModal = ({ show, onHide, refetch }) => {
+const AddUserModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
    const { control, reset, setError, handleSubmit, formState } = useForm({
