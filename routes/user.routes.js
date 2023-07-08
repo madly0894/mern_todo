@@ -1,8 +1,7 @@
 const { Router } = require('express');
 const router = Router();
-const { body, validationResult, checkSchema } = require('express-validator');
 const User = require('../models/User');
-const { validateSchema } = require('../utils');
+const { validateSchema, getAge } = require('../utils');
 
 router.get('/', async (req, res) => {
    try {
@@ -14,22 +13,16 @@ router.get('/', async (req, res) => {
 
       const skip = (page - 1) * limit;
 
-      const users = await User.find().skip(skip).limit(limit);
+      const users = await User.find().skip(skip).limit(limit).sort({ _id: 'desc' });
 
-      // setTimeout(
-      //    () =>
       res.status(200).json({
          data: users,
-         pagination: {
-            currentPage: page,
-            totalPages,
-            totalItems,
-            hasNextPage: page < totalPages,
-            nextPage: page + 1,
-         },
+         currentPage: page,
+         totalPages,
+         totalItems,
+         hasNextPage: page < totalPages,
+         nextPage: page + 1,
       });
-      // 1000,
-      // );
    } catch (e) {
       res.status(500).json({ message: 'Something went wrong, please try again' });
    }
@@ -50,7 +43,7 @@ router.post('/add', validateSchema, async (req, res) => {
          name: req.body.name,
          surname: req.body.surname,
          dateOfBirth: req.body.dateOfBirth,
-         age: +new Date().getFullYear() - +new Date(req.body.dateOfBirth).getFullYear(),
+         age: getAge(req.body.dateOfBirth),
       });
 
       await user
@@ -75,7 +68,7 @@ router.put('/:id/edit', validateSchema, async (req, res) => {
             name: req.body.name,
             surname: req.body.surname,
             dateOfBirth: req.body.dateOfBirth,
-            age: +new Date().getFullYear() - +new Date(req.body.dateOfBirth).getFullYear(),
+            age: getAge(req.body.dateOfBirth),
          })
          .then(() => {
             res.status(200).json({ message: 'User successfully updated' });
@@ -99,6 +92,20 @@ router.delete('/:id/delete', async (req, res) => {
          })
          .catch(() => {
             res.status(500).json({ message: 'User not deleted' });
+         });
+   } catch (err) {
+      res.status(500).json({ message: 'Something went wrong, please try again' });
+   }
+});
+
+router.delete('/delete', async (req, res) => {
+   try {
+      await User.deleteMany({ _id: { $in: req.query.ids } })
+         .then(() => {
+            res.status(200).json({ message: 'Users successfully deleted' });
+         })
+         .catch(() => {
+            res.status(500).json({ message: 'Users not deleted' });
          });
    } catch (err) {
       res.status(500).json({ message: 'Something went wrong, please try again' });

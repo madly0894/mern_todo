@@ -15,7 +15,8 @@ const queryClient = new QueryClient();
 Notify.init({
    width: '300px',
    position: 'right-bottom',
-   // closeButton: false,
+   closeButton: false,
+   timeout: 1500,
 });
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)

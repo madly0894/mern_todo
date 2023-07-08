@@ -1,12 +1,7 @@
 const validate = require('./middleware/validate.middleware');
 const { body } = require('express-validator');
-const getOwnYear = (count = 0) => {
-   const date = new Date();
-   const year = date.getFullYear();
-   const month = date.getMonth();
-   const day = date.getDate();
-   return new Date(year - count, month, day).toDateString();
-};
+
+const getAge = date => new Date().getFullYear() - new Date(date).getFullYear();
 
 const validateSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
@@ -14,12 +9,30 @@ const validateSchema = validate([
    body('dateOfBirth')
       .isDate({ format: 'YYYY-MM-DD' })
       .withMessage('Invalid date format')
-      .isBefore(getOwnYear(18))
-      .withMessage('Your age must be over 18')
-      .isAfter(getOwnYear(35))
-      .withMessage('Your age must be under 35')
+      .custom(value => {
+         const currentDate = new Date();
+         const birthDate = new Date(value);
+         const age = currentDate.getFullYear() - birthDate.getFullYear();
+
+         if (
+            age < 18 ||
+            age > 35 ||
+            (age === 18 && currentDate.getMonth() < birthDate.getMonth()) ||
+            (age === 35 && currentDate.getMonth() > birthDate.getMonth()) ||
+            (age === 18 &&
+               currentDate.getMonth() === birthDate.getMonth() &&
+               currentDate.getDate() < birthDate.getDate()) ||
+            (age === 35 &&
+               currentDate.getMonth() === birthDate.getMonth() &&
+               currentDate.getDate() > birthDate.getDate())
+         ) {
+            throw new Error('Birth date must be between 18 and 35 years ago');
+         }
+
+         return true;
+      })
       .notEmpty()
       .withMessage('Date of birth field is required'),
 ]);
 
-module.exports = { getOwnYear, validateSchema };
+module.exports = { validateSchema, getAge };

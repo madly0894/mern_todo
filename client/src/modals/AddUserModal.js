@@ -8,7 +8,7 @@ import Input from '../components/Input';
 import { API_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addUser } from '../api/users.api';
-import { Block } from 'notiflix';
+import { getOwnYear } from '../utils';
 
 export const validateSchema = yup.object().shape({
    name: yup.string().required('Name field is required'),
@@ -19,7 +19,7 @@ export const validateSchema = yup.object().shape({
 export const defaultValues = {
    name: '',
    surname: '',
-   dateOfBirth: dayjs('2005-').format(DATE_FORMAT),
+   dateOfBirth: dayjs(getOwnYear(18)).format(DATE_FORMAT),
 };
 
 const AddUserModal = ({ show, onHide }) => {
@@ -39,30 +39,28 @@ const AddUserModal = ({ show, onHide }) => {
             });
          });
       },
-      onSuccess: body => {
+      onSuccess: () => {
          // Invalidate and refetch
          queryClient.invalidateQueries({ queryKey: [API_KEY] });
          onHide();
-         reset(defaultValues);
       },
    });
 
    return (
       <Modal
          isOpen={show}
-         onRequestClose={() => {
-            onHide();
-            reset(defaultValues);
-         }}
+         onRequestClose={onHide}
+         onAfterClose={() => reset(defaultValues)}
          contentLabel='Add User'
          style={{
             content: MODAL_CONTENT_STYLE,
          }}
          shouldCloseOnOverlayClick={!isLoadingAddUser}
+         closeTimeoutMS={300}
       >
          <form onSubmit={handleSubmit(mutateAddUser)}>
             <div className='modal-header'>
-               <h2>Add user</h2>
+               <h3>Add user</h3>
                <button type='button' className='close-action' onClick={onHide}>
                   <i className='material-icons'>clear</i>
                </button>
@@ -71,7 +69,15 @@ const AddUserModal = ({ show, onHide }) => {
             <div className='modal-content'>
                <Input autoFocus name='name' control={control} placeholder='Name' />
                <Input name='surname' control={control} placeholder='Surname' />
-               <Input type='date' name='dateOfBirth' control={control} placeholder='Date of birth' />
+               <Input
+                  type='date'
+                  name='dateOfBirth'
+                  control={control}
+                  placeholder='Date of birth'
+                  min={dayjs(getOwnYear(35)).format(DATE_FORMAT)}
+                  // max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
+                  helperText='Birth date must be between 18 and 35 years ago'
+               />
             </div>
 
             <div className='modal-footer'>

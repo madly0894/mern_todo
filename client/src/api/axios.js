@@ -1,7 +1,15 @@
 import axios from 'axios';
-import { Notify } from 'notiflix';
+import { Block, Notify } from 'notiflix';
 
 const $api = axios.create({ baseURL: 'http://localhost:8081/api/' });
+
+$api.interceptors.request.use(config => {
+   if (config?.notify) {
+      Block.hourglass(config?.notify, 'Please wait...');
+   }
+
+   return config;
+});
 
 $api.interceptors.response.use(
    config => {
@@ -13,18 +21,25 @@ $api.interceptors.response.use(
          }
       }
 
-      return config;
-   },
-   async error => {
-      if (error.response) {
-         Notify.failure(`${error.response.status}: ${error.response.statusText}`);
-
-         throw error;
+      if (config.config?.notify) {
+         Block.remove(config.config.notify);
       }
 
-      Notify.failure(error.message);
+      return config;
+   },
+   async err => {
+      if (err.config?.notify) {
+         Block.remove(err.config.notify);
+      }
 
-      throw error;
+      if (err.response) {
+         Notify.failure(`${err.response.status}: ${err.response.statusText}`);
+         throw err;
+      }
+
+      Notify.failure(err.message);
+
+      throw err;
    },
 );
 

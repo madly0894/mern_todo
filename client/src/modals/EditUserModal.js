@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { editUser, getUserById } from '../api/users.api';
 import { defaultValues, validateSchema } from './AddUserModal';
 import dayjs from 'dayjs';
+import { getOwnYear } from '../utils';
 
 const EditUserModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
@@ -53,10 +54,11 @@ const EditUserModal = ({ show, onHide }) => {
             content: MODAL_CONTENT_STYLE,
          }}
          shouldCloseOnOverlayClick={!isLoadingEditUser || isLoadingGetUserById}
+         closeTimeoutMS={300}
       >
          <form onSubmit={handleSubmit(validateValues => mutateEditUser({ id: show, body: validateValues }))}>
             <div className='modal-header'>
-               <h2>Edit user</h2>
+               <h3>Edit user</h3>
                <button type='button' className='close-action' onClick={onHide}>
                   <i className='material-icons'>clear</i>
                </button>
@@ -65,7 +67,15 @@ const EditUserModal = ({ show, onHide }) => {
             <div className='modal-content'>
                <Input autoFocus name='name' control={control} placeholder='Name' />
                <Input name='surname' control={control} placeholder='Surname' />
-               <Input type='date' name='dateOfBirth' control={control} placeholder='Date of birth' />
+               <Input
+                  type='date'
+                  name='dateOfBirth'
+                  control={control}
+                  placeholder='Date of birth'
+                  min={dayjs(getOwnYear(35)).format(DATE_FORMAT)}
+                  max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
+                  helperText='Birth date must be between 18 and 35 years ago'
+               />
             </div>
 
             <div className='modal-footer'>

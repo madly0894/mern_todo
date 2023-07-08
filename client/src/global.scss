@@ -1,32 +1,107 @@
 * {
-  outline: 0;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+   outline: 0;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-  width: 100%;
-  height: 100%;
-  font-family: $font-raleway;
-  font-feature-settings: 'pnum' on, 'lnum' on !important;
-  font-variant-numeric: lining-nums !important;
-  background-color: $modal-bg-color;
+   width: 100%;
+   height: 100%;
+   font-family: $font-raleway;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+   background-color: $modal-bg-color;
 }
 
 button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 4px;
 }
 
 i {
-  font-size: 16px !important;
+   font-size: 16px !important;
 }
 
 .inline-text {
-  font-family: $font-playfair;
+   font-family: $font-playfair;
+}
+
+input {
+   font-family: $font-raleway !important;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+   font-weight: 500;
+   height: 39px;
+   &:hover,
+   &:focus {
+      border-color: $light-black-color !important;
+   }
+   &[type='checkbox'] {
+      cursor: pointer;
+   }
+}
+
+button,
+a {
+   font-family: $font-raleway !important;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+}
+
+button {
+   border: none;
+   cursor: pointer;
+   background-color: transparent;
+}
+
+button[disabled] {
+   background-color: $textarea-placeholder-color !important;
+   pointer-events: none;
+}
+
+button.action {
+   line-height: 1;
+   height: 36px;
+   padding-inline: 10px;
+   font-weight: 700;
+   border-radius: 12px;
+   color: $white-color !important;
+}
+
+button.add-action {
+   background-color: $success-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      //background-color: darkgreen;
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
+}
+
+button.edit-action {
+   background-color: $info-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      //background-color: royalblue;
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
+}
+
+button.delete-action {
+   background-color: $error-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      //background-color: darkred;
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
 }

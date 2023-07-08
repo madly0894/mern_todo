@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteUser, getUsers } from './api/users.api';
+import { deleteAllUsers, deleteUser, getUsers } from './api/users.api';
 import AddUserModal from './modals/AddUserModal';
 import EditUserModal from './modals/EditUserModal';
 import { API_KEY } from './constants';
-import { Block, Confirm } from 'notiflix';
+import { Confirm } from 'notiflix';
 import dayjs from 'dayjs';
 import { combineValues } from './utils';
 import { useInView } from 'react-cool-inview';
@@ -14,9 +14,10 @@ function App() {
 
    const [addUserModal, setAddUserModal] = React.useState(false);
    const [editUserModal, setEditUserModal] = React.useState(false);
+   const [selectedRowIds, setSelectedRowIds] = React.useState([]);
 
    const {
-      data: { pages = [] } = {},
+      data: pages = [],
       fetchNextPage,
       hasNextPage,
       isFetchingNextPage,
@@ -25,20 +26,25 @@ function App() {
       queryFn: getUsers,
       retry: false,
       refetchOnWindowFocus: false,
-      getNextPageParam: (lastPage, allPages) => lastPage.pagination.hasNextPage && lastPage.pagination.nextPage,
+      getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage && lastPage.nextPage,
+      select: data => combineValues(data.pages),
    });
 
-   const { mutate } = useMutation({
+   const { mutate: mutateDeleteUser } = useMutation({
       mutationFn: deleteUser,
-      onMutate: () => {
-         Block.hourglass('.App-content', 'Please wait...');
-      },
       onSuccess: () => {
          // Invalidate and refetch
          queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         setSelectedRowIds([]);
       },
-      onSettled: () => {
-         Block.remove('.App-content');
+   });
+
+   const { mutate: mutateDeleteAllUsers } = useMutation({
+      mutationFn: deleteAllUsers,
+      onSuccess: () => {
+         // Invalidate and refetch
+         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         setSelectedRowIds([]);
       },
    });
 
@@ -58,7 +64,13 @@ function App() {
 
    const onDeleteUser = userId => {
       Confirm.show('Delete User', 'Are you sure you want to delete this user?', 'Yes', 'No', () => {
-         mutate(userId);
+         mutateDeleteUser(userId);
+      });
+   };
+
+   const onDeleteAllUsers = ids => {
+      Confirm.show('Delete All Users', 'Are you sure you want to delete all users?', 'Yes', 'No', () => {
+         mutateDeleteAllUsers(ids);
       });
    };
 
@@ -69,36 +81,99 @@ function App() {
          </h1>
 
          <div className='App-content'>
-            <div className='table'>
+            <div className={`table ${pages.length >= 10 ? 'box' : ''}`}>
                <table>
                   <thead>
-                     <tr className='thead'>
+                     <tr className={'thead'}>
                         <th>
-                           <button className='action add-action' onClick={() => setAddUserModal(true)}>
-                              <i className='material-icons'>add</i>
-                           </button>
+                           <input
+                              type='checkbox'
+                              checked={pages.length !== 0 && selectedRowIds.length === pages.length}
+                              disabled={pages.length === 0}
+                              onChange={e => {
+                                 // add list
+                                 if (e.target.checked) {
+                                    setSelectedRowIds(pages.map(d => d._id));
+                                 } else {
+                                    // remove list
+                                    setSelectedRowIds([]);
+                                 }
+                              }}
+                           />
                         </th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Date of birth</th>
                         <th>Age</th>
-                        <th>Actions</th>
+                        <th>
+                           <div className='actions'>
+                              <button
+                                 title='Add user'
+                                 className='action add-action'
+                                 onClick={() => setAddUserModal(true)}
+                              >
+                                 <i className='material-icons'>add</i>
+                              </button>
+
+                              <button
+                                 title='Delete all users'
+                                 className='action delete-action'
+                                 disabled={selectedRowIds.length === 0}
+                                 onClick={() => onDeleteAllUsers(selectedRowIds)}
+                              >
+                                 <i className='material-icons'>delete_forever</i>
+                              </button>
+                           </div>
+                        </th>
                      </tr>
                   </thead>
                   <tbody>
-                     {combineValues(pages).map((user, index, array) => (
-                        <tr key={user._id} className='tbody' ref={(index === array.length - 1 && observe) || null}>
-                           <td>{index + 1}</td>
+                     {pages.map((user, index, array) => (
+                        <tr
+                           key={user._id}
+                           className='tbody'
+                           ref={(index === array.length - 1 && observe) || null}
+                           aria-selected={selectedRowIds.some(id => id === user._id)}
+                        >
+                           <td>
+                              <input
+                                 type='checkbox'
+                                 checked={selectedRowIds.some(id => id === user._id)}
+                                 onChange={e => {
+                                    // add to list
+                                    if (e.target.checked) {
+                                       setSelectedRowIds(prev => [...prev, user._id]);
+                                    } else {
+                                       // remove from list
+                                       setSelectedRowIds(prev => prev.filter(id => id !== user._id));
+                                    }
+                                 }}
+                              />
+                           </td>
                            <td>{user.name}</td>
                            <td>{user.surname}</td>
                            <td>{dayjs(user.dateOfBirth).format('DD MMMM YYYY')}</td>
                            <td>{user.age}</td>
                            <td>
                               <div className='actions'>
-                                 <button onClick={() => setEditUserModal(user._id)} className='action edit-action'>
+                                 <button
+                                    title='Edit user'
+                                    onClick={() => setEditUserModal(user._id)}
+                                    className='action edit-action'
+                                    disabled={
+                                       selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== user._id)
+                                    }
+                                 >
                                     <i className='material-icons'>edit</i>
                                  </button>
-                                 <button onClick={() => onDeleteUser(user._id)} className='action delete-action'>
+                                 <button
+                                    title='Delete user'
+                                    onClick={() => onDeleteUser(user._id)}
+                                    className='action delete-action'
+                                    disabled={
+                                       selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== user._id)
+                                    }
+                                 >
                                     <i className='material-icons'>delete</i>
                                  </button>
                               </div>
