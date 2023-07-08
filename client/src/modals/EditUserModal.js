@@ -39,13 +39,8 @@ const EditUserModal = ({ show, onHide, refetch }) => {
       },
       onSuccess: (data, variables, context) => {
          // Invalidate and refetch
-         // queryClient.invalidateQueries({ queryKey: [API_KEY, show] });
-         refetch({
-            refetchPage: (lastPage, index, allPages) => {
-               const findIndex = allPages.findIndex(ev => ev.data.some(e => e._id === variables.id));
-               return index === findIndex;
-            },
-         });
+         queryClient.invalidateQueries({ queryKey: [API_KEY, show] });
+         // Hide modal
          onHide();
       },
    });

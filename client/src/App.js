@@ -35,13 +35,8 @@ function App() {
       mutationFn: deleteUser,
       onSuccess: (data, variables, context) => {
          // Invalidate and refetch
-         refetch({
-            refetchPage: (lastPage, index, allPages) => {
-               const findIndex = allPages.findIndex(ev => ev.data.some(e => e._id === variables));
-               return index === findIndex;
-            },
-         });
-         // queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         // Reset selected rows
          setSelectedRowIds([]);
       },
    });
@@ -51,6 +46,7 @@ function App() {
       onSuccess: () => {
          // Invalidate and refetch
          queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         // Reset selected rows
          setSelectedRowIds([]);
       },
    });

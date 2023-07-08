@@ -41,10 +41,8 @@ const AddUserModal = ({ show, onHide, refetch }) => {
       },
       onSuccess: () => {
          // Invalidate and refetch
-         // queryClient.invalidateQueries({ queryKey: [API_KEY] });
-         refetch({
-            refetchPage: (lastPage, index, allPages) => index === 0,
-         });
+         queryClient.invalidateQueries({ queryKey: [API_KEY] });
+         // Hide modal
          onHide();
       },
    });
