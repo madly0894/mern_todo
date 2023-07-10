@@ -96,10 +96,6 @@ const Main = () => {
       });
    };
 
-   const checkLine = {
-      textDecoration: 'line-through',
-   };
-
    return (
       <main>
          <div className='App-content'>
