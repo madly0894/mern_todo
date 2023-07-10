@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 
       const skip = (page - 1) * limit;
 
-      const employees = await Employee.find().skip(skip).limit(limit).sort({ id: 'desc' });
+      const employees = await Employee.find().skip(skip).limit(limit).sort({ _id: 'desc' });
 
       res.status(200).json({
          data: employees,
@@ -88,7 +88,7 @@ router.delete('/:id/delete', async (req, res) => {
 
 router.delete('/delete', async (req, res) => {
    try {
-      await Employee.deleteMany({ id: { $in: req.query.ids } });
+      await Employee.deleteMany({ _id: { $in: req.query.ids } });
 
       res.status(200).json({ message: 'Users successfully deleted' });
    } catch (err) {
