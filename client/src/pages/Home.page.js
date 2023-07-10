@@ -6,10 +6,10 @@ import AddEmployeeModal from '../modals/AddEmployeeModal';
 import EditEmployeeModal from '../modals/EditEmployeeModal';
 import { QUERY_KEY, DATE_CELL_FORMAT } from '../constants';
 import { Confirm } from 'notiflix';
-import { combineValues } from '../utils';
 import { useInView } from 'react-cool-inview';
+import Utils from '../utils';
 
-const Main = () => {
+const HomePage = () => {
    const queryClient = useQueryClient();
 
    const [addEmployeeModal, setAddEmployeeModal] = React.useState(false);
@@ -27,7 +27,7 @@ const Main = () => {
       retry: false,
       refetchOnWindowFocus: false,
       getNextPageParam: (lastPage, allPages) => lastPage.hasNextPage && lastPage.nextPage,
-      select: data => combineValues(data.pages),
+      select: data => Utils.combineValues(data.pages),
    });
 
    const { mutate: mutateDeleteEmployee } = useMutation({
@@ -197,4 +197,4 @@ const Main = () => {
    );
 };
 
-export default Main;
+export default HomePage;

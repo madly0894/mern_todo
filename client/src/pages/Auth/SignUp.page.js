@@ -15,7 +15,7 @@ const validationSchema = yup.object().shape({
       .required(),
 });
 
-const SignUp = () => {
+const SignUpPage = () => {
    const { control, handleSubmit } = useForm({
       defaultValues: {
          name: '',
@@ -57,4 +57,4 @@ const SignUp = () => {
    );
 };
 
-export default SignUp;
+export default SignUpPage;

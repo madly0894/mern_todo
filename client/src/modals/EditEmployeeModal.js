@@ -8,7 +8,7 @@ import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { editEmployee, getEmployeeById } from '../api/employees.api';
 import { defaultValues, validateSchema } from './AddEmployeeModal';
-import { getOwnYear } from '../utils';
+import Utils from '../utils';
 
 const EditEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
@@ -73,8 +73,8 @@ const EditEmployeeModal = ({ show, onHide }) => {
                   name='dateOfBirth'
                   control={control}
                   placeholder='Date of birth'
-                  min={dayjs(getOwnYear(35)).format(DATE_FORMAT)}
-                  max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
+                  min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
+                  max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
                   helperText='Birth date must be between 18 and 35 years ago'
                />
             </div>

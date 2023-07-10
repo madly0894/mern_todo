@@ -8,7 +8,7 @@ import Input from '../components/Input';
 import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addEmployee } from '../api/employees.api';
-import { getOwnYear } from '../utils';
+import Utils from '../utils';
 
 export const validateSchema = yup.object().shape({
    name: yup.string().required('Name field is required'),
@@ -19,7 +19,7 @@ export const validateSchema = yup.object().shape({
 export const defaultValues = {
    name: '',
    surname: '',
-   dateOfBirth: dayjs(getOwnYear(18)).format(DATE_FORMAT),
+   dateOfBirth: dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT),
 };
 
 const AddEmployeeModal = ({ show, onHide }) => {
@@ -75,8 +75,8 @@ const AddEmployeeModal = ({ show, onHide }) => {
                   name='dateOfBirth'
                   control={control}
                   placeholder='Date of birth'
-                  min={dayjs(getOwnYear(35)).format(DATE_FORMAT)}
-                  max={dayjs(getOwnYear(18)).format(DATE_FORMAT)}
+                  min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
+                  max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
                   helperText='Birth date must be between 18 and 35 years ago'
                />
             </div>

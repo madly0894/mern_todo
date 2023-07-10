@@ -10,7 +10,7 @@ const validationSchema = yup.object().shape({
    password: yup.string().min(6).required(),
 });
 
-const SignIn = () => {
+const SignInPage = () => {
    const { control, handleSubmit } = useForm({
       defaultValues: {
          username: '',
@@ -43,4 +43,4 @@ const SignIn = () => {
    );
 };
 
-export default SignIn;
+export default SignInPage;

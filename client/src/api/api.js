@@ -1,19 +1,19 @@
 import axios from 'axios';
 import { Block, Notify } from 'notiflix';
-import { getAccessToken } from '../utils';
+import Utils from '../utils';
 
 const $api = axios.create({
    baseURL: process.env.REACT_APP_API_URL,
 });
 
 $api.interceptors.request.use(config => {
-   config.headers.Authorization = `Bearer ${getAccessToken()}`;
+   config.headers.Authorization = `Bearer ${Utils.getAccessToken()}`;
 
    if (config?.notify) {
       Block.hourglass(config?.notify, 'Please wait...');
    }
 
-   if (!getAccessToken()) {
+   if (!Utils.getAccessToken() || config.withoutAuthorization) {
       delete config.headers.Authorization;
    }
 

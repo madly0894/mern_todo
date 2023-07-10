@@ -1,10 +1,8 @@
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useSignOut } from '../hooks/useSignOut';
-import { getAccessToken, removeAccessToken } from '../utils';
-import { useQuery } from '@tanstack/react-query';
-import { QUERY_KEY } from '../constants';
-import jwtDecode from 'jwt-decode';
+import useUser from '../hooks/useUser';
+import { Confirm } from 'notiflix';
 
 const pathname = {
    '/': (
@@ -19,27 +17,19 @@ const pathname = {
 const Header = () => {
    const location = useLocation();
 
-   const token = getAccessToken();
-
-   const { data } = useQuery({
-      queryKey: [QUERY_KEY.user],
-      retry: false,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      initialData: token && jwtDecode(token),
-      onError: () => {
-         removeAccessToken();
-      },
-   });
+   const { user } = useUser();
 
    const onSignOut = useSignOut();
+
+   const signOut = () => {
+      Confirm.show('Sign out', 'Are you sure you want to sign out from system?', 'Yes', 'No', () => onSignOut());
+   };
 
    return (
       <header>
          <h1 className='title'>{pathname[location.pathname]}</h1>
 
-         {!token ? (
+         {!user ? (
             <ul className='right-block'>
                <li>
                   <NavLink to='/auth/sign-in'>Sign In</NavLink>
@@ -51,10 +41,10 @@ const Header = () => {
          ) : (
             <div className='right-block'>
                <p>
-                  {data.name} (@{data.username})
+                  {user.name} (@{user.username})
                </p>
 
-               <button className='action delete-action' onClick={onSignOut}>
+               <button className='action delete-action' onClick={signOut}>
                   Sign Out
                </button>
             </div>

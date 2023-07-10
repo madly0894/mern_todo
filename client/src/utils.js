@@ -1,18 +1,26 @@
-export const setAccessToken = accessToken => localStorage.setItem('accessToken', accessToken);
-export const getAccessToken = () => localStorage.getItem('accessToken');
-export const removeAccessToken = () => localStorage.removeItem('accessToken');
+class Utils {
+   static getOwnYear(count) {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const day = date.getDate();
+      return new Date(year - count, month, day).toDateString();
+   }
+   static combineValues(values) {
+      return values.reduce((previousValue, currentValue) => {
+         previousValue.push(...currentValue.data);
+         return previousValue;
+      }, []);
+   }
+   static setAccessToken(accessToken) {
+      return localStorage.setItem('accessToken', accessToken);
+   }
+   static getAccessToken() {
+      return localStorage.getItem('accessToken');
+   }
+   static removeAccessToken() {
+      return localStorage.removeItem('accessToken');
+   }
+}
 
-export const combineValues = values => {
-   return values.reduce((previousValue, currentValue) => {
-      previousValue.push(...currentValue.data);
-      return previousValue;
-   }, []);
-};
-
-export const getOwnYear = (count = 0) => {
-   const date = new Date();
-   const year = date.getFullYear();
-   const month = date.getMonth();
-   const day = date.getDate();
-   return new Date(year - count, month, day).toDateString();
-};
+export default Utils;
