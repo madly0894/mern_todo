@@ -8,12 +8,15 @@ router.get('/', async (req, res) => {
    try {
       const { page = 1, limit = 10 } = req.body;
 
-      const totalItems = await Employee.countDocuments();
+      const totalItems = await Employee.countDocuments({ username: req.user.username });
       const totalPages = Math.ceil(totalItems / limit);
 
       const skip = (page - 1) * limit;
 
-      const employees = await Employee.find().skip(skip).limit(limit).sort({ _id: 'desc' });
+      const employees = await Employee.find({ username: req.user.username })
+         .skip(skip)
+         .limit(limit)
+         .sort({ _id: 'desc' });
 
       res.status(200).json({
          data: employees,
@@ -43,6 +46,7 @@ router.post('/add', employeeValidationSchema, async (req, res) => {
       const { name, surname, dateOfBirth } = req.body;
 
       await Employee.create({
+         username: req.user.username,
          name,
          surname,
          dateOfBirth,
@@ -51,6 +55,7 @@ router.post('/add', employeeValidationSchema, async (req, res) => {
 
       res.status(201).json({ message: 'Employee successfully added' });
    } catch (e) {
+      console.log(e);
       res.status(500).json({ message: 'Something went wrong, please try again' });
    }
 });

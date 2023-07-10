@@ -23,7 +23,7 @@ router.post('/sign-up', signUpValidationSchema, async (req, res) => {
       });
 
       const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
-         expiresIn: '2h',
+         expiresIn: '24h',
       });
 
       res.status(201).json({ token, message: 'You have successfully registered' });
@@ -49,7 +49,7 @@ router.post('/sign-in', signInValidationSchema, async (req, res) => {
       }
 
       const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
-         expiresIn: '2h',
+         expiresIn: '24h',
       });
 
       res.status(200).json({ token, message: 'You have successfully logged in' });
