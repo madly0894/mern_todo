@@ -96,6 +96,10 @@ const Main = () => {
       });
    };
 
+   const checkLine = {
+      textDecoration: 'line-through',
+   };
+
    return (
       <main>
          <div className='App-content'>
@@ -141,6 +145,7 @@ const Main = () => {
                      {pages.map((employee, index, array) => {
                         const isCheckedItem = selectedRowIds.some(id => id === employee._id);
                         const isCheckedAllItems = selectedRowIds.every(id => id !== employee._id);
+                        const checkItemClass = isCheckedItem ? 'checkLine' : null;
 
                         return (
                            <tr
@@ -158,10 +163,10 @@ const Main = () => {
                                     }
                                  />
                               </td>
-                              <td>{employee.name}</td>
-                              <td>{employee.surname}</td>
-                              <td>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
-                              <td>{employee.age}</td>
+                              <td className={checkItemClass}>{employee.name}</td>
+                              <td className={checkItemClass}>{employee.surname}</td>
+                              <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
+                              <td className={checkItemClass}>{employee.age}</td>
                               <td>
                                  <div className='actions'>
                                     <button
