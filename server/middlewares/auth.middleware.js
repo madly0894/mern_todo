@@ -13,6 +13,7 @@ module.exports = (req, res, next) => {
 
       next();
    } catch {
+      res.clearCookie('accessToken');
       res.status(401).json({ message: 'Invalid Token' });
    }
 };

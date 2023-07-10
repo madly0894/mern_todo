@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const auth = require('./middlewares/auth.middleware');
-// const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 // const multer  = require('multer');
 
 const app = express();
@@ -16,13 +16,13 @@ app.use(
       origin: process.env.CLIENT_URL,
    }),
 );
+app.use(cookieParser());
+// app.use(multer({ dest: '/tmp/'}));
+
 // routers
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/user', auth, require('./routes/user.routes'));
 app.use('/api/employees', auth, require('./routes/employee.routes'));
-// app.use(express.static('public'));
-// app.use(multer({ dest: '/tmp/'}));
-// app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
    app.use('/', express.static(path.join(__dirname, 'client', 'build')));
@@ -44,7 +44,7 @@ async function start() {
          useNewUrlParser: true,
          useUnifiedTopology: true,
       });
-      app.listen(port, () => console.log(`App listening at ${process.env.API_URL}`));
+      app.listen(port, () => console.log(`Server started on ${process.env.API_URL}`));
    } catch (e) {
       console.log('Server message', e.message);
       process.exit(1);

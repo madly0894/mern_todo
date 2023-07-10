@@ -31,6 +31,11 @@ router.post('/sign-up', signUpValidationSchema, async (req, res) => {
          accessToken: token,
       });
 
+      res.cookie('accessToken', token, {
+         httpOnly: true,
+         signed: true,
+      });
+
       res.status(201).json({ token, message: 'You have successfully registered' });
    } catch (e) {
       res.status(500).json({ message: 'Something went wrong, please try again' });
@@ -61,6 +66,11 @@ router.post('/sign-in', signInValidationSchema, async (req, res) => {
          accessToken: token,
       });
 
+      res.cookie('accessToken', token, {
+         httpOnly: true,
+         signed: true,
+      });
+
       res.status(200).json({ token, message: 'You have successfully logged in' });
    } catch (e) {
       res.status(500).json({ message: 'Something went wrong, please try again' });
@@ -72,6 +82,10 @@ router.post('/sign-out', signOutValidationSchema, async (req, res) => {
       const { accessToken } = req.body;
 
       await Token.deleteOne({ accessToken });
+
+      res.clearCookie('accessToken', {
+         signed: false,
+      });
 
       res.status(200).json({ message: 'You have successfully logged out' });
    } catch (e) {
