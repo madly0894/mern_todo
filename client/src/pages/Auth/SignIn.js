@@ -30,7 +30,7 @@ const SignIn = () => {
 
             <div className='modal-content'>
                <Input autoFocus name='username' control={control} placeholder='Username' />
-               <Input name='password' control={control} placeholder='Surname' type='password' />
+               <Input name='password' control={control} placeholder='*******' type='password' />
             </div>
 
             <div className='modal-footer'>

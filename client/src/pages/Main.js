@@ -145,6 +145,7 @@ const Main = () => {
                      {pages.map((employee, index, array) => {
                         const isCheckedItem = selectedRowIds.some(id => id === employee._id);
                         const isCheckedAllItems = selectedRowIds.every(id => id !== employee._id);
+                        const checkItemClass = isCheckedItem ? 'checkLine' : null;
 
                         return (
                            <tr
@@ -162,12 +163,10 @@ const Main = () => {
                                     }
                                  />
                               </td>
-                              <td style={isCheckedItem ? checkLine : null}>{employee.name}</td>
-                              <td style={isCheckedItem ? checkLine : null}>{employee.surname}</td>
-                              <td style={isCheckedItem ? checkLine : null}>
-                                 {dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}
-                              </td>
-                              <td style={isCheckedItem ? checkLine : null}>{employee.age}</td>
+                              <td className={checkItemClass}>{employee.name}</td>
+                              <td className={checkItemClass}>{employee.surname}</td>
+                              <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
+                              <td className={checkItemClass}>{employee.age}</td>
                               <td>
                                  <div className='actions'>
                                     <button
