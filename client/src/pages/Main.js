@@ -140,6 +140,7 @@ const Main = () => {
                   <tbody>
                      {pages.map((employee, index, array) => {
                         const isCheckedItem = selectedRowIds.some(id => id === employee._id);
+                        const isCheckedAllItems = selectedRowIds.every(id => id !== employee._id);
 
                         return (
                            <tr
@@ -167,9 +168,7 @@ const Main = () => {
                                        title='Edit employee'
                                        onClick={e => setEditEmployeeModal(employee._id)}
                                        className='action edit-action'
-                                       disabled={
-                                          selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
-                                       }
+                                       disabled={selectedRowIds.length !== 0 && isCheckedAllItems}
                                     >
                                        <i className='material-icons'>edit</i>
                                     </button>
@@ -177,9 +176,7 @@ const Main = () => {
                                        title='Delete employee'
                                        onClick={e => onDeleteUser(employee._id)}
                                        className='action delete-action'
-                                       disabled={
-                                          selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
-                                       }
+                                       disabled={selectedRowIds.length !== 0 && isCheckedAllItems}
                                     >
                                        <i className='material-icons'>delete</i>
                                     </button>
