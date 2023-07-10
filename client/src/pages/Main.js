@@ -138,50 +138,54 @@ const Main = () => {
                      </tr>
                   </thead>
                   <tbody>
-                     {pages.map((employee, index, array) => (
-                        <tr
-                           key={employee._id}
-                           className='tbody'
-                           ref={(index === array.length - 1 && observe) || null}
-                           aria-selected={selectedRowIds.some(id => id === employee._id)}
-                        >
-                           <td>
-                              <input
-                                 type='checkbox'
-                                 checked={selectedRowIds.some(id => id === employee._id)}
-                                 onChange={e => onToggleRow({ isChecked: e.target.checked, userId: employee._id })}
-                              />
-                           </td>
-                           <td>{employee.name}</td>
-                           <td>{employee.surname}</td>
-                           <td>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
-                           <td>{employee.age}</td>
-                           <td>
-                              <div className='actions'>
-                                 <button
-                                    title='Edit employee'
-                                    onClick={e => setEditEmployeeModal(employee._id)}
-                                    className='action edit-action'
-                                    disabled={
-                                       selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
-                                    }
-                                 >
-                                    <i className='material-icons'>edit</i>
-                                 </button>
-                                 <button
-                                    title='Delete employee'
-                                    onClick={e => onDeleteUser(employee._id)}
-                                    className='action delete-action'
-                                    disabled={
-                                       selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
-                                    }
-                                 >
-                                    <i className='material-icons'>delete</i>
-                                 </button>
-                              </div>
-                           </td>
-                        </tr>
-                     ))}
+                     {pages.map((employee, index, array) => {
+                        const isChecked = selectedRowIds.some(id => id === employee._id);
+
+                        return (
+                           <tr
+                              key={employee._id}
+                              className='tbody'
+                              ref={(index === array.length - 1 && observe) || null}
+                              aria-selected={isChecked}
+                           >
+                              <td>
+                                 <input
+                                    type='checkbox'
+                                    checked={isChecked}
+                                    onChange={e => onToggleRow({ isChecked: e.target.checked, userId: employee._id })}
+                                 />
+                              </td>
+                              <td>{employee.name}</td>
+                              <td>{employee.surname}</td>
+                              <td>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
+                              <td>{employee.age}</td>
+                              <td>
+                                 <div className='actions'>
+                                    <button
+                                       title='Edit employee'
+                                       onClick={e => setEditEmployeeModal(employee._id)}
+                                       className='action edit-action'
+                                       disabled={
+                                          selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
+                                       }
+                                    >
+                                       <i className='material-icons'>edit</i>
+                                    </button>
+                                    <button
+                                       title='Delete employee'
+                                       onClick={e => onDeleteUser(employee._id)}
+                                       className='action delete-action'
+                                       disabled={
+                                          selectedRowIds.length !== 0 && selectedRowIds.every(id => id !== employee._id)
+                                       }
+                                    >
+                                       <i className='material-icons'>delete</i>
+                                    </button>
+                                 </div>
+                              </td>
+                           </tr>
+                        );
+                     })}
                   </tbody>
                </table>
             </div>
