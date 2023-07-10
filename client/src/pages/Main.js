@@ -64,17 +64,17 @@ const Main = () => {
       },
    });
 
-   const onToggleRow = ({ isChecked, userId }) => {
+   const onToggleRow = ({ isChecked, employeeId }) => {
       // add to list
       if (isChecked) {
-         setSelectedRowIds(prev => [...prev, userId]);
+         setSelectedRowIds(prev => [...prev, employeeId]);
       } else {
          // remove from list
-         setSelectedRowIds(prev => prev.filter(id => id !== userId));
+         setSelectedRowIds(prev => prev.filter(id => id !== employeeId));
       }
    };
 
-   const onToggleAllRow = isChecked => {
+   const onToggleAllRows = isChecked => {
       // add list
       if (isChecked) {
          setSelectedRowIds(pages.map(d => d._id));
@@ -108,7 +108,7 @@ const Main = () => {
                               type='checkbox'
                               checked={pages.length !== 0 && selectedRowIds.length === pages.length}
                               disabled={pages.length === 0}
-                              onChange={e => onToggleAllRow(e.target.checked)}
+                              onChange={e => onToggleAllRows(e.target.checked)}
                            />
                         </th>
                         <th>Name</th>
@@ -139,20 +139,22 @@ const Main = () => {
                   </thead>
                   <tbody>
                      {pages.map((employee, index, array) => {
-                        const checked = selectedRowIds.some(id => id === employee._id);
+                        const isCheckedItem = selectedRowIds.some(id => id === employee._id);
 
                         return (
                            <tr
                               key={employee._id}
                               className='tbody'
                               ref={(index === array.length - 1 && observe) || null}
-                              aria-selected={checked}
+                              aria-selected={isCheckedItem}
                            >
                               <td>
                                  <input
                                     type='checkbox'
-                                    checked={checked}
-                                    onChange={e => onToggleRow({ isChecked: e.target.checked, userId: employee._id })}
+                                    checked={isCheckedItem}
+                                    onChange={e =>
+                                       onToggleRow({ isChecked: e.target.checked, employeeId: employee._id })
+                                    }
                                  />
                               </td>
                               <td>{employee.name}</td>
