@@ -1,5 +1,0 @@
-{
-   "port": 8081,
-   "jwtSecret": "jwt-secret-key",
-   "mongoUri": "mongodb+srv://vugaryusifli:0635877039@users.hw4joq1.mongodb.net/?retryWrites=true&w=majority"
-}

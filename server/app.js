@@ -1,9 +1,9 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const config = require('config');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const auth = require('./middleware/auth.middleware');
+const auth = require('./middlewares/auth.middleware');
 // const cookieParser = require('cookie-parser')
 // const multer  = require('multer');
 
@@ -11,7 +11,11 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(
+   cors({
+      origin: process.env.CLIENT_URL,
+   }),
+);
 // routers
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/employees', auth, require('./routes/employee.routes'));
@@ -27,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
    });
 }
 
-const port = config.get('port') || 5000;
+const port = process.env.PORT || 5000;
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, "Couldn't connect to server"));
@@ -35,7 +39,7 @@ db.once('open', () => console.log('Connected to MongoDB!'));
 
 async function start() {
    try {
-      await mongoose.connect(config.get('mongoUri'), {
+      await mongoose.connect(process.env.DB_URL, {
          useNewUrlParser: true,
          useUnifiedTopology: true,
       });

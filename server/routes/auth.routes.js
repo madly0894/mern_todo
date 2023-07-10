@@ -2,7 +2,6 @@ const { Router } = require('express');
 const router = Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const User = require('../models/User');
 const { signInValidationSchema, signUpValidationSchema } = require('../validationUtils');
 
@@ -23,7 +22,7 @@ router.post('/sign-up', signUpValidationSchema, async (req, res) => {
          password: hashedPassword,
       });
 
-      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, config.get('jwtSecret'), {
+      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
          expiresIn: '2h',
       });
 
@@ -49,7 +48,7 @@ router.post('/sign-in', signInValidationSchema, async (req, res) => {
          return res.status(400).json({ message: 'Wrong password, please try again' });
       }
 
-      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, config.get('jwtSecret'), {
+      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
          expiresIn: '2h',
       });
 

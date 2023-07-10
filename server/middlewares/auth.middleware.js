@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const config = require('config');
 
 module.exports = (req, res, next) => {
    try {
@@ -9,7 +8,7 @@ module.exports = (req, res, next) => {
          return res.status(403).json({ message: 'A token is required for authentication' });
       }
 
-      const decodedToken = jwt.verify(token, config.get('jwtSecret'));
+      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decodedToken;
 
       next();
