@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const auth = require('./middlewares/auth.middleware');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 // const multer  = require('multer');
 
 const app = express();
@@ -16,7 +16,7 @@ app.use(
       origin: process.env.CLIENT_URL,
    }),
 );
-app.use(cookieParser());
+// app.use(cookieParser());
 // app.use(multer({ dest: '/tmp/'}));
 
 // routers
