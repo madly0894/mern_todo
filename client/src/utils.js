@@ -1,3 +1,7 @@
+export const setAccessToken = accessToken => localStorage.setItem('accessToken', accessToken);
+export const getAccessToken = () => localStorage.getItem('accessToken');
+export const removeAccessToken = () => localStorage.removeItem('accessToken');
+
 export const combineValues = values => {
    return values.reduce((previousValue, currentValue) => {
       previousValue.push(...currentValue.data);

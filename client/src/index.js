@@ -1,12 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Modal from 'react-modal';
 
-import './index.scss';
+import './styles/index.scss';
 import App from './App';
 import { Notify } from 'notiflix';
+import { BrowserRouter } from 'react-router-dom';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -24,10 +25,13 @@ Modal.setAppElement('#root');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-   // Provide the client to your App
-   <QueryClientProvider client={queryClient}>
-      <App />
-      {/* The rest of your application */}
-      <ReactQueryDevtools initialIsOpen={false} />
-   </QueryClientProvider>,
+   <BrowserRouter basename='/' future={{ v7_startTransition: true }}>
+      <QueryClientProvider client={queryClient}>
+         {/*Provide the client to your App*/}
+         <App />
+         {/* The rest of your application */}
+         <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+      ,
+   </BrowserRouter>,
 );

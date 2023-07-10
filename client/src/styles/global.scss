@@ -1,0 +1,266 @@
+* {
+   outline: 0;
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+   width: 100%;
+   height: 100%;
+   font-family: $font-raleway;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+   background-color: $modal-bg-color;
+}
+
+button {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   gap: 4px;
+}
+
+i {
+   font-size: 16px !important;
+}
+
+ul {
+   list-style: none;
+}
+
+a {
+   text-decoration: none;
+}
+
+.inline-text {
+   font-family: $font-playfair;
+}
+
+input {
+   font-family: $font-raleway !important;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+   font-weight: 500;
+   height: 39px;
+   &:hover,
+   &:focus {
+      border-color: $light-black-color !important;
+   }
+   &[type='checkbox'] {
+      cursor: pointer;
+   }
+}
+
+button,
+a {
+   font-family: $font-raleway !important;
+   font-feature-settings:
+      'pnum' on,
+      'lnum' on !important;
+   font-variant-numeric: lining-nums !important;
+}
+
+button {
+   border: none;
+   cursor: pointer;
+   background-color: transparent;
+}
+
+button[disabled] {
+   background-color: $disable-color !important;
+   pointer-events: none;
+}
+
+button.action {
+   line-height: 1;
+   height: 36px;
+   padding-inline: 10px;
+   font-weight: 700;
+   border-radius: 12px;
+   color: $white-color !important;
+}
+
+button.add-action {
+   background-color: $success-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
+}
+
+button.edit-action {
+   background-color: $info-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
+}
+
+button.delete-action {
+   background-color: $error-color;
+   transition: all 0.25s ease-in-out;
+   &:hover {
+      box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+   }
+}
+
+.ReactModal__Overlay {
+   opacity: 0;
+   transition: all 300ms ease-in-out;
+   background-color: rgba(0, 0, 0, 0.5) !important;
+   z-index: 99;
+}
+
+.ReactModal__Overlay--after-open {
+   opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+   opacity: 0;
+}
+
+.form-group {
+   input {
+      background-color: transparent;
+      border: 1px solid $gray-black-color;
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      width: 100%;
+   }
+   &.form-group-error {
+      input {
+         border: 1px solid $error-color;
+      }
+   }
+   .helper-text {
+      color: $gray-black-color;
+      margin-top: 4px;
+      margin-left: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      &:first-letter {
+         text-transform: uppercase;
+      }
+      &.error-text {
+         color: $error-color;
+      }
+   }
+}
+
+.ReactModal__Content,
+.form-block {
+   width: 400px;
+   border-radius: 12px !important;
+   border: none !important;
+   padding: 16px !important;
+
+   form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .modal-header {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+         padding-bottom: 16px;
+         h3 {
+            line-height: 1 !important;
+         }
+
+         button {
+            i {
+               font-size: 24px !important;
+            }
+         }
+      }
+      .modal-content {
+         display: flex;
+         flex-direction: column;
+         gap: 10px;
+      }
+      .modal-footer {
+         display: flex;
+         align-items: center;
+
+         button.action {
+            width: 100%;
+            height: 39px !important;
+            font-size: 15px;
+         }
+      }
+   }
+}
+
+.form-block {
+   border: 1px solid $gray-black-color !important;
+   .modal-header {
+      justify-content: center !important;
+   }
+}
+
+.notiflix-notify {
+   padding-inline: 16px !important;
+   border-radius: 12px !important;
+   .nx-close-button {
+      right: 16px !important;
+   }
+   svg.nx-message-icon {
+      width: 32px !important;
+      height: 32px !important;
+      left: 16px !important;
+   }
+   svg {
+      g {
+         path {
+            fill: $white-pure-color !important;
+         }
+      }
+   }
+   .nx-message {
+      width: calc(100% - 36px) !important;
+      margin: 0 0 0 36px !important;
+   }
+}
+.notiflix-confirm-content {
+   border-radius: 12px !important;
+   font-family: $font-raleway !important;
+   padding: 16px !important;
+
+   div {
+      font-weight: 500 !important;
+   }
+
+   .notiflix-confirm-head {
+      h5 {
+         color: inherit !important;
+         font-weight: bold !important;
+         padding: 0 0 16px !important;
+         font-size: 1.17em !important;
+         line-height: 1 !important;
+      }
+   }
+
+   .notiflix-confirm-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      a {
+         margin: 0 !important;
+         &:first-child {
+            order: 1;
+            background-color: $error-color !important;
+         }
+         border-radius: 12px !important;
+         font-weight: 700 !important;
+      }
+   }
+}

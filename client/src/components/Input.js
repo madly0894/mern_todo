@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { useController } from 'react-hook-form';
 
 const Input = ({ name, control, type = 'text', defaultValue = '', helperText, ...inputProps }) => {

@@ -1,0 +1,133 @@
+.App {
+   width: 100%;
+   //height: 100%;
+   max-width: 768px;
+   margin: 0 auto;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+
+   header {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: $purple-color;
+      margin-bottom: 32px;
+      padding-inline: 16px;
+      color: $white-color;
+
+      .right-block {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+
+         p {
+            font-weight: 500;
+         }
+
+         li {
+            a {
+               height: 36px;
+               display: flex;
+               align-items: center;
+               background-color: $primary-color;
+               font-weight: 500;
+               color: $white-color;
+               border-radius: 12px;
+               transition: all 0.25s ease-in-out;
+               padding-inline: 10px;
+               &:hover,
+               &.active {
+                  box-shadow: inset 0 -60px 5px -5px rgba(0, 0, 0, 0.25);
+               }
+            }
+         }
+      }
+   }
+
+   main {
+      width: 100%;
+
+      .App-content {
+         position: relative;
+         width: 100%;
+         border: 1px solid $gray-black-color;
+         border-radius: 12px;
+         .table-header {
+            padding: 16px;
+            border-bottom: 1px solid $gray-black-color;
+
+            h1 {
+               line-height: 1;
+            }
+         }
+         .table-container {
+            width: 100%;
+            height: 659px;
+            overflow-y: auto;
+            border-radius: 12px;
+            &.box {
+               table {
+                  tr {
+                     &.tbody {
+                        &:last-child {
+                           td {
+                              border-bottom: none;
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+            table {
+               width: 100%;
+               border-collapse: collapse;
+               tr {
+                  th,
+                  td {
+                     border: 1px solid $gray-black-color;
+                  }
+                  th,
+                  td {
+                     font-weight: 500;
+                     padding: 8px;
+                     text-align: center;
+                     border-top: none;
+                     height: 55px;
+                     &:first-child {
+                        border-left: none;
+                     }
+                     &:last-child {
+                        border-right: none;
+                     }
+                  }
+
+                  th {
+                     position: sticky;
+                     top: 0; /* Don't forget this, required for the stickiness */
+                     background-color: $white-active-color;
+                     font-weight: 700;
+                  }
+                  th,
+                  td {
+                     .actions {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 10px;
+                     }
+                  }
+
+                  &.tbody {
+                     &[aria-selected='true'] {
+                        background-color: $white-color;
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
