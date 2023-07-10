@@ -139,19 +139,19 @@ const Main = () => {
                   </thead>
                   <tbody>
                      {pages.map((employee, index, array) => {
-                        const isChecked = selectedRowIds.some(id => id === employee._id);
+                        const checked = selectedRowIds.some(id => id === employee._id);
 
                         return (
                            <tr
                               key={employee._id}
                               className='tbody'
                               ref={(index === array.length - 1 && observe) || null}
-                              aria-selected={isChecked}
+                              aria-selected={checked}
                            >
                               <td>
                                  <input
                                     type='checkbox'
-                                    checked={isChecked}
+                                    checked={checked}
                                     onChange={e => onToggleRow({ isChecked: e.target.checked, userId: employee._id })}
                                  />
                               </td>
