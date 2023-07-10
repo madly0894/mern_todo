@@ -55,7 +55,6 @@ router.post('/add', employeeValidationSchema, async (req, res) => {
 
       res.status(201).json({ message: 'Employee successfully added' });
    } catch (e) {
-      console.log(e);
       res.status(500).json({ message: 'Something went wrong, please try again' });
    }
 });
