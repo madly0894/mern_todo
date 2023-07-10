@@ -33,15 +33,6 @@ const employeeValidationSchema = validate([
       .withMessage('Date of birth field is required'),
 ]);
 
-const signInValidationSchema = validate([
-   body('username').notEmpty().withMessage('Username field is required'),
-   body('password')
-      .notEmpty()
-      .withMessage('Password field is required')
-      .isLength({ min: 6 })
-      .withMessage('Password must contain at least 6 characters'),
-]);
-
 const signUpValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
    body('username').notEmpty().withMessage('Username field is required'),
@@ -57,4 +48,15 @@ const signUpValidationSchema = validate([
       .withMessage('The passwords do not match'),
 ]);
 
-module.exports = { signInValidationSchema, signUpValidationSchema, employeeValidationSchema };
+const signInValidationSchema = validate([
+   body('username').notEmpty().withMessage('Username field is required'),
+   body('password')
+      .notEmpty()
+      .withMessage('Password field is required')
+      .isLength({ min: 6 })
+      .withMessage('Password must contain at least 6 characters'),
+]);
+
+const signOutValidationSchema = validate([body('accessToken').notEmpty().withMessage('Access token is required')]);
+
+module.exports = { signInValidationSchema, signUpValidationSchema, signOutValidationSchema, employeeValidationSchema };

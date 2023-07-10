@@ -66,13 +66,14 @@ const EditEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <Input autoFocus name='name' control={control} placeholder='Name' />
-               <Input name='surname' control={control} placeholder='Surname' />
+               <Input autoFocus name='name' control={control} placeholder='Name*' />
+               <Input name='surname' control={control} placeholder='Surname*' />
+               <Input name='patronymic' control={control} placeholder='Patronymic' />
                <Input
                   type='date'
                   name='dateOfBirth'
                   control={control}
-                  placeholder='Date of birth'
+                  placeholder='Date of birth*'
                   min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
                   max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
                   helperText='Birth date must be between 18 and 35 years ago'

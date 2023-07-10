@@ -84,13 +84,13 @@ const HomePage = () => {
       }
    };
 
-   const onDeleteUser = userId => {
+   const onDeleteEmployee = employeeId => {
       Confirm.show('Delete Employee', 'Are you sure you want to delete this employee?', 'Yes', 'No', () => {
-         mutateDeleteEmployee(userId);
+         mutateDeleteEmployee(employeeId);
       });
    };
 
-   const onDeleteAllUsers = ids => {
+   const onDeleteAllEmployees = ids => {
       Confirm.show('Delete All Employees', 'Are you sure you want to delete all employees?', 'Yes', 'No', () => {
          mutateDeleteAllEmployees(ids);
       });
@@ -113,6 +113,7 @@ const HomePage = () => {
                         </th>
                         <th>Name</th>
                         <th>Surname</th>
+                        <th>Patronymic</th>
                         <th>Date of birth</th>
                         <th>Age</th>
                         <th>
@@ -129,7 +130,7 @@ const HomePage = () => {
                                  title='Delete all users'
                                  className='action delete-action'
                                  disabled={selectedRowIds.length === 0}
-                                 onClick={e => onDeleteAllUsers(selectedRowIds)}
+                                 onClick={e => onDeleteAllEmployees(selectedRowIds)}
                               >
                                  <i className='material-icons'>delete_forever</i>
                               </button>
@@ -161,6 +162,7 @@ const HomePage = () => {
                               </td>
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>
+                              <td className={checkItemClass}>{employee.patronymic}</td>
                               <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
                               <td className={checkItemClass}>{employee.age}</td>
                               <td>
@@ -175,7 +177,7 @@ const HomePage = () => {
                                     </button>
                                     <button
                                        title='Delete employee'
-                                       onClick={e => onDeleteUser(employee._id)}
+                                       onClick={e => onDeleteEmployee(employee._id)}
                                        className='action delete-action'
                                        disabled={selectedRowIds.length !== 0 && isCheckedAllItems}
                                     >

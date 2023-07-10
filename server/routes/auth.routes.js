@@ -3,7 +3,8 @@ const router = Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { signInValidationSchema, signUpValidationSchema } = require('../validationUtils');
+const Token = require('../models/Token');
+const { signInValidationSchema, signUpValidationSchema, signOutValidationSchema } = require('../validationUtils');
 
 router.post('/sign-up', signUpValidationSchema, async (req, res) => {
    try {
@@ -22,8 +23,12 @@ router.post('/sign-up', signUpValidationSchema, async (req, res) => {
          password: hashedPassword,
       });
 
-      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ uid: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
          expiresIn: '24h',
+      });
+
+      await Token.create({
+         accessToken: token,
       });
 
       res.status(201).json({ token, message: 'You have successfully registered' });
@@ -48,11 +53,27 @@ router.post('/sign-in', signInValidationSchema, async (req, res) => {
          return res.status(400).json({ message: 'Wrong password, please try again' });
       }
 
-      const token = jwt.sign({ userId: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ uid: user.id, name: user.name, username: user.username }, process.env.JWT_SECRET, {
          expiresIn: '24h',
       });
 
+      await Token.create({
+         accessToken: token,
+      });
+
       res.status(200).json({ token, message: 'You have successfully logged in' });
+   } catch (e) {
+      res.status(500).json({ message: 'Something went wrong, please try again' });
+   }
+});
+
+router.post('/sign-out', signOutValidationSchema, async (req, res) => {
+   try {
+      const { accessToken } = req.body;
+
+      await Token.deleteOne({ accessToken });
+
+      res.status(200).json({ message: 'You have successfully logged out' });
    } catch (e) {
       res.status(500).json({ message: 'Something went wrong, please try again' });
    }

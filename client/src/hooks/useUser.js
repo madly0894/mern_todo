@@ -8,6 +8,7 @@ export default function useUser() {
 
    const { data } = useQuery({
       queryKey: [QUERY_KEY.user],
+      // queryFn: getUser,
       retry: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

@@ -43,12 +43,13 @@ router.get('/:id', async (req, res) => {
 
 router.post('/add', employeeValidationSchema, async (req, res) => {
    try {
-      const { name, surname, dateOfBirth } = req.body;
+      const { name, surname, patronymic = '', dateOfBirth } = req.body;
 
       await Employee.create({
          username: req.user.username,
          name,
          surname,
+         patronymic,
          dateOfBirth,
          age: getAge(dateOfBirth),
       });
@@ -61,16 +62,18 @@ router.post('/add', employeeValidationSchema, async (req, res) => {
 
 router.put('/:id/edit', employeeValidationSchema, async (req, res) => {
    try {
-      const { name, surname, dateOfBirth } = req.body;
+      const { name, surname, patronymic = '', dateOfBirth } = req.body;
 
-      const employee = await Employee.findById(req.params.id);
-
-      await employee.updateOne({
-         name,
-         surname,
-         dateOfBirth,
-         age: getAge(dateOfBirth),
-      });
+      await Employee.updateOne(
+         { _id: req.params.id },
+         {
+            name,
+            surname,
+            patronymic,
+            dateOfBirth,
+            age: getAge(dateOfBirth),
+         },
+      );
 
       res.status(200).json({ message: 'Employee successfully updated' });
    } catch (err) {
@@ -80,9 +83,7 @@ router.put('/:id/edit', employeeValidationSchema, async (req, res) => {
 
 router.delete('/:id/delete', async (req, res) => {
    try {
-      const employee = await Employee.findById(req.params.id);
-
-      await employee.deleteOne();
+      await Employee.deleteOne({ _id: req.params.id });
 
       res.status(200).json({ message: 'Employee successfully deleted' });
    } catch (err) {

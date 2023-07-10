@@ -19,10 +19,12 @@ const Header = () => {
 
    const { user } = useUser();
 
-   const onSignOut = useSignOut();
+   const signOutMutation = useSignOut();
 
    const signOut = () => {
-      Confirm.show('Sign out', 'Are you sure you want to sign out from system?', 'Yes', 'No', () => onSignOut());
+      Confirm.show('Sign out', 'Are you sure you want to sign out?', 'Yes', 'No', () => {
+         signOutMutation();
+      });
    };
 
    return (
