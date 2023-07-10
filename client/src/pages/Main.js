@@ -96,6 +96,10 @@ const Main = () => {
       });
    };
 
+   const checkLine = {
+      textDecoration: 'line-through',
+   };
+
    return (
       <main>
          <div className='App-content'>
@@ -158,10 +162,12 @@ const Main = () => {
                                     }
                                  />
                               </td>
-                              <td>{employee.name}</td>
-                              <td>{employee.surname}</td>
-                              <td>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
-                              <td>{employee.age}</td>
+                              <td style={isCheckedItem ? checkLine : null}>{employee.name}</td>
+                              <td style={isCheckedItem ? checkLine : null}>{employee.surname}</td>
+                              <td style={isCheckedItem ? checkLine : null}>
+                                 {dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}
+                              </td>
+                              <td style={isCheckedItem ? checkLine : null}>{employee.age}</td>
                               <td>
                                  <div className='actions'>
                                     <button
