@@ -43,7 +43,7 @@ async function start() {
          useNewUrlParser: true,
          useUnifiedTopology: true,
       });
-      app.listen(port, () => console.log('Example app listening at http://%s:%s', port));
+      app.listen(port, () => console.log(`App listening at ${process.env.API_URL}`));
    } catch (e) {
       console.log('Server message', e.message);
       process.exit(1);
