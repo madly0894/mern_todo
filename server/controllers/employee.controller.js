@@ -41,13 +41,14 @@ class EmployeeController {
 
    async createEmployee(req, res) {
       try {
-         const { name, surname, patronymic = '', dateOfBirth } = req.body;
+         const { name, surname, patronymic = '', secretWord = '', dateOfBirth } = req.body;
 
          await Employee.create({
             userId: req.user.id,
             name,
             surname,
             patronymic,
+            secretWord,
             dateOfBirth,
             age: getAge(dateOfBirth),
          });
@@ -60,7 +61,7 @@ class EmployeeController {
 
    async editEmployee(req, res) {
       try {
-         const { name, surname, patronymic = '', dateOfBirth } = req.body;
+         const { name, surname, patronymic = '', secretWord = '', dateOfBirth } = req.body;
 
          await Employee.updateOne(
             { _id: req.params.id },
@@ -68,6 +69,7 @@ class EmployeeController {
                name,
                surname,
                patronymic,
+               secretWord,
                dateOfBirth,
                age: getAge(dateOfBirth),
             },
