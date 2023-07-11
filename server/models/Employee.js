@@ -5,6 +5,7 @@ const schema = new Schema({
    name: { type: String, required: true },
    surname: { type: String, required: true },
    patronymic: { type: String },
+   secretWord: { type: String },
    dateOfBirth: { type: Date, required: true },
    age: { type: Number, min: 18, max: 35, required: true },
 });
