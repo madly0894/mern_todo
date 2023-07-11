@@ -4,6 +4,7 @@ module.exports = class EmployeeDto {
    name;
    surname;
    patronymic;
+   secretWord;
    dateOfBirth;
    age;
 
@@ -13,6 +14,7 @@ module.exports = class EmployeeDto {
       this.name = model.name;
       this.surname = model.surname;
       this.patronymic = model.patronymic;
+      this.secretWord = model.secretWord;
       this.dateOfBirth = model.dateOfBirth;
       this.age = model.age;
    }
