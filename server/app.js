@@ -3,7 +3,6 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const auth = require('./middlewares/auth.middleware');
 // const cookieParser = require('cookie-parser');
 // const multer  = require('multer');
 
@@ -20,9 +19,7 @@ app.use(
 // app.use(multer({ dest: '/tmp/'}));
 
 // routers
-app.use('/api/auth', require('./routes/auth.routes'));
-app.use('/api/user', auth, require('./routes/user.routes'));
-app.use('/api/employees', auth, require('./routes/employee.routes'));
+app.use('/api', require('./api'));
 
 if (process.env.NODE_ENV === 'production') {
    app.use('/', express.static(path.join(__dirname, 'client', 'build')));

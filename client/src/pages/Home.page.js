@@ -77,7 +77,7 @@ const HomePage = () => {
    const onToggleAllRows = isChecked => {
       // add list
       if (isChecked) {
-         setSelectedRowIds(pages.map(d => d._id));
+         setSelectedRowIds(pages.map(d => d.id));
       } else {
          // remove list
          setSelectedRowIds([]);
@@ -140,13 +140,13 @@ const HomePage = () => {
                   </thead>
                   <tbody>
                      {pages.map((employee, index, array) => {
-                        const isCheckedItem = selectedRowIds.some(id => id === employee._id);
-                        const isCheckedAllItems = selectedRowIds.every(id => id !== employee._id);
+                        const isCheckedItem = selectedRowIds.some(id => id === employee.id);
+                        const isCheckedAllItems = selectedRowIds.every(id => id !== employee.id);
                         const checkItemClass = isCheckedItem ? 'checkLine' : null;
 
                         return (
                            <tr
-                              key={employee._id}
+                              key={employee.id}
                               className='tbody'
                               ref={(index === array.length - 1 && observe) || null}
                               aria-selected={isCheckedItem}
@@ -156,7 +156,7 @@ const HomePage = () => {
                                     type='checkbox'
                                     checked={isCheckedItem}
                                     onChange={e =>
-                                       onToggleRow({ isChecked: e.target.checked, employeeId: employee._id })
+                                       onToggleRow({ isChecked: e.target.checked, employeeId: employee.id })
                                     }
                                  />
                               </td>
@@ -169,7 +169,7 @@ const HomePage = () => {
                                  <div className='actions'>
                                     <button
                                        title='Edit employee'
-                                       onClick={e => setEditEmployeeModal(employee._id)}
+                                       onClick={e => setEditEmployeeModal(employee.id)}
                                        className='action edit-action'
                                        disabled={selectedRowIds.length !== 0 && isCheckedAllItems}
                                     >
@@ -177,7 +177,7 @@ const HomePage = () => {
                                     </button>
                                     <button
                                        title='Delete employee'
-                                       onClick={e => onDeleteEmployee(employee._id)}
+                                       onClick={e => onDeleteEmployee(employee.id)}
                                        className='action delete-action'
                                        disabled={selectedRowIds.length !== 0 && isCheckedAllItems}
                                     >

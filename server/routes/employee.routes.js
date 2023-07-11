@@ -1,104 +1,13 @@
 const { Router } = require('express');
 const router = Router();
-const Employee = require('../models/Employee');
+const employeeController = require('../controllers/employee.controller');
 const { employeeValidationSchema } = require('../validationUtils');
-const { getAge } = require('../utils');
 
-router.get('/', async (req, res) => {
-   try {
-      const { page = 1, limit = 10 } = req.body;
-
-      const totalItems = await Employee.countDocuments({ username: req.user.username });
-      const totalPages = Math.ceil(totalItems / limit);
-
-      const skip = (page - 1) * limit;
-
-      const employees = await Employee.find({ username: req.user.username })
-         .skip(skip)
-         .limit(limit)
-         .sort({ _id: 'desc' });
-
-      res.status(200).json({
-         data: employees,
-         currentPage: page,
-         totalPages,
-         totalItems,
-         hasNextPage: page < totalPages,
-         nextPage: page + 1,
-      });
-   } catch (e) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
-
-router.get('/:id', async (req, res) => {
-   try {
-      const employee = await Employee.findById(req.params.id);
-
-      res.status(200).json(employee);
-   } catch (e) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
-
-router.post('/add', employeeValidationSchema, async (req, res) => {
-   try {
-      const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
-      await Employee.create({
-         username: req.user.username,
-         name,
-         surname,
-         patronymic,
-         dateOfBirth,
-         age: getAge(dateOfBirth),
-      });
-
-      res.status(201).json({ message: 'Employee successfully added' });
-   } catch (e) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
-
-router.put('/:id/edit', employeeValidationSchema, async (req, res) => {
-   try {
-      const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
-      await Employee.updateOne(
-         { _id: req.params.id },
-         {
-            name,
-            surname,
-            patronymic,
-            dateOfBirth,
-            age: getAge(dateOfBirth),
-         },
-      );
-
-      res.status(200).json({ message: 'Employee successfully updated' });
-   } catch (err) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
-
-router.delete('/:id/delete', async (req, res) => {
-   try {
-      await Employee.deleteOne({ _id: req.params.id });
-
-      res.status(200).json({ message: 'Employee successfully deleted' });
-   } catch (err) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
-
-router.delete('/delete', async (req, res) => {
-   try {
-      await Employee.deleteMany({ _id: { $in: req.query.ids } });
-
-      res.status(200).json({ message: 'Users successfully deleted' });
-   } catch (err) {
-      res.status(500).json({ message: 'Something went wrong, please try again' });
-   }
-});
+router.get('/', employeeController.getEmployees);
+router.get('/:id', employeeController.getEmployee);
+router.post('/add', employeeValidationSchema, employeeController.createEmployee);
+router.put('/:id/edit', employeeValidationSchema, employeeController.editEmployee);
+router.delete('/:id/delete', employeeController.deleteEmployee);
+router.delete('/delete', employeeController.deleteEmployees);
 
 module.exports = router;
