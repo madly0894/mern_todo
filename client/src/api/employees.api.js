@@ -12,7 +12,7 @@ export const getEmployees = async params => {
    });
    return response.data;
 };
-export const getEmployeeById = async id => {
+export const getEmployee = async id => {
    const response = await $api.get(`${QUERY_KEY.employees}/${id}`, {
       notify: '.ReactModal__Content',
    });
@@ -30,7 +30,7 @@ export const deleteEmployee = id =>
    $api.delete(`${QUERY_KEY.employees}/${id}/delete`, {
       notify: '.App-content',
    });
-export const deleteAllEmployees = ids =>
+export const deleteEmployees = ids =>
    $api.delete(`${QUERY_KEY.employees}/delete`, {
       params: {
          ids,

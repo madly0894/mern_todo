@@ -5,7 +5,7 @@ const { getAge } = require('../utils');
 class EmployeeController {
    async getEmployees(req, res) {
       try {
-         const { page = 1, limit = 10 } = req.body;
+         const { page = 1, limit = 15 } = req.body;
 
          const totalItems = await Employee.countDocuments({ userId: req.user.id });
          const totalPages = Math.ceil(totalItems / limit);

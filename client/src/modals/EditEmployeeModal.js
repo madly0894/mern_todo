@@ -6,7 +6,7 @@ import Modal from 'react-modal';
 import Input from '../components/Input';
 import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { editEmployee, getEmployeeById } from '../api/employees.api';
+import { editEmployee, getEmployee } from '../api/employees.api';
 import { defaultValues, validateSchema } from './AddEmployeeModal';
 import Utils from '../utils';
 
@@ -19,7 +19,7 @@ const EditEmployeeModal = ({ show, onHide }) => {
    });
 
    const { mutate: mutateGetEmployeeById, isLoading: isLoadingGetEmployeeById } = useMutation({
-      mutationFn: getEmployeeById,
+      mutationFn: getEmployee,
       onSuccess: data => {
          reset({
             ...data,

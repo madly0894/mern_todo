@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as dayjs from 'dayjs';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteAllEmployees, deleteEmployee, getEmployees } from '../api/employees.api';
+import { deleteEmployee, deleteEmployees, getEmployees } from '../api/employees.api';
 import AddEmployeeModal from '../modals/AddEmployeeModal';
 import EditEmployeeModal from '../modals/EditEmployeeModal';
 import { QUERY_KEY, DATE_CELL_FORMAT } from '../constants';
@@ -41,7 +41,7 @@ const HomePage = () => {
    });
 
    const { mutate: mutateDeleteAllEmployees } = useMutation({
-      mutationFn: deleteAllEmployees,
+      mutationFn: deleteEmployees,
       onSuccess: () => {
          // Invalidate and refetch
          queryClient.invalidateQueries({ queryKey: [QUERY_KEY.employees] });
