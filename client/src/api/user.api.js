@@ -7,3 +7,10 @@ export const getUser = async () => {
    });
    return response.data;
 };
+
+export const deleteUser = async () => {
+   const response = await $api.delete(QUERY_KEY.user, {
+      notify: '.App',
+   });
+   return response.data;
+};

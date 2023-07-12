@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useSignOut } from '../hooks/useSignOut';
 import useUser from '../hooks/useUser';
 import { Confirm } from 'notiflix';
+import { useDeleteUser } from '../hooks/useDeleteUser';
 
 const pathname = {
    '/': (

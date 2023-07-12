@@ -4,7 +4,7 @@ import { QUERY_KEY } from '../constants';
 import Utils from '../utils';
 
 export default function useUser() {
-   const token = Utils.getAccessToken();
+   const accessToken = Utils.getAccessToken();
 
    const { data } = useQuery({
       queryKey: [QUERY_KEY.user],
@@ -13,7 +13,7 @@ export default function useUser() {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      initialData: token && jwtDecode(token),
+      initialData: accessToken && jwtDecode(accessToken),
       onError: () => {
          Utils.removeAccessToken();
       },

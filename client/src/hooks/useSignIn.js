@@ -13,7 +13,7 @@ export default function useSignIn() {
       mutationFn: signIn,
       onSuccess: data => {
          // Invalidate and refetch
-         Utils.setAccessToken(data.token);
+         Utils.setAccessToken(data.accessToken);
          queryClient.setQueryData([QUERY_KEY.user], jwtDecode(data.token));
          navigate('/');
       },

@@ -13,8 +13,8 @@ export default function useSignUp() {
       mutationFn: signUp,
       onSuccess: data => {
          // Invalidate and refetch
-         Utils.setAccessToken(data.token);
-         queryClient.setQueryData([QUERY_KEY.user], jwtDecode(data.token));
+         Utils.setAccessToken(data.accessToken);
+         queryClient.setQueryData([QUERY_KEY.user], jwtDecode(data.accessToken));
          navigate('/');
       },
    });

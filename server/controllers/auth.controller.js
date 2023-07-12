@@ -25,15 +25,13 @@ class AuthController {
 
          const userDto = new UserDto(user);
 
-         const token = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
+         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
             expiresIn: '24h',
          });
 
-         await Token.create({
-            accessToken: token,
-         });
+         await Token.create({ accessToken });
 
-         res.status(201).json({ token, message: 'You have successfully registered' });
+         res.status(201).json({ accessToken, message: 'You have successfully registered' });
       } catch (e) {
          res.status(500).json({ message: 'Something went wrong, please try again' });
       }
@@ -57,15 +55,13 @@ class AuthController {
 
          const userDto = new UserDto(user);
 
-         const token = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
+         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
             expiresIn: '24h',
          });
 
-         await Token.create({
-            accessToken: token,
-         });
+         await Token.create({ accessToken });
 
-         res.status(200).json({ token, message: 'You have successfully logged in' });
+         res.status(200).json({ accessToken, message: 'You have successfully logged in' });
       } catch (e) {
          res.status(500).json({ message: 'Something went wrong, please try again' });
       }

@@ -1,4 +1,5 @@
 const Employee = require('../models/Employee');
+const UserDto = require('../dtos/user.dto');
 const EmployeeDto = require('../dtos/employee.dto');
 const { getAge } = require('../utils');
 
@@ -12,10 +13,18 @@ class EmployeeController {
 
          const skip = (page - 1) * limit;
 
-         const employees = await Employee.find({ userId: req.user.id }).skip(skip).limit(limit).sort({ _id: 'desc' });
+         const employees = await Employee.find({ userId: req.user.id })
+            .skip(skip)
+            .limit(limit)
+            .sort({ _id: 'desc' })
+            .populate('userId');
 
          res.status(200).json({
-            data: employees.map(employee => new EmployeeDto(employee)),
+            data: employees.map(employee => ({
+               ...new EmployeeDto(employee),
+               userId: employee.userId._id,
+               user: new UserDto(employee.userId),
+            })),
             currentPage: page,
             totalPages,
             totalItems,
