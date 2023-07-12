@@ -114,6 +114,7 @@ const HomePage = () => {
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Patronymic</th>
+                        <th>Secret word</th>
                         <th>Date of birth</th>
                         <th>Age</th>
                         <th>
@@ -163,6 +164,7 @@ const HomePage = () => {
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>
                               <td className={checkItemClass}>{employee.patronymic}</td>
+                              <td className={checkItemClass}>{employee.secretWord}</td>
                               <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
                               <td className={checkItemClass}>{employee.age}</td>
                               <td>
