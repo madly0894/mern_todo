@@ -34,7 +34,6 @@ const AddEmployeeModal = ({ show, onHide }) => {
 
    const { mutate: mutateAddEmployee, isLoading: isLoadingAddEmployee } = useMutation({
       mutationFn: addEmployee,
-
       onError: error => {
          error.response.data?.errors.forEach(err => {
             setError(err.path, {
