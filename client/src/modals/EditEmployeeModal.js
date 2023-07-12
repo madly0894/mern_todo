@@ -69,6 +69,7 @@ const EditEmployeeModal = ({ show, onHide }) => {
                <Input autoFocus name='name' control={control} placeholder='Name*' />
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
+               <Input name='secretWord' control={control} placeholder='Secret word' />
                <Input
                   type='date'
                   name='dateOfBirth'

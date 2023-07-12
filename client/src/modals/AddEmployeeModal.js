@@ -20,6 +20,7 @@ export const defaultValues = {
    name: '',
    surname: '',
    patronymic: '',
+   secretWord: '',
    dateOfBirth: dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT),
 };
 
@@ -33,6 +34,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
 
    const { mutate: mutateAddEmployee, isLoading: isLoadingAddEmployee } = useMutation({
       mutationFn: addEmployee,
+
       onError: error => {
          error.response.data?.errors.forEach(err => {
             setError(err.path, {
@@ -72,6 +74,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
                <Input autoFocus name='name' control={control} placeholder='Name*' />
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
+               <Input name='secretWord' control={control} placeholder='Secret word' />
                <Input
                   type='date'
                   name='dateOfBirth'
