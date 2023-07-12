@@ -34,6 +34,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
 
    const { mutate: mutateAddEmployee, isLoading: isLoadingAddEmployee } = useMutation({
       mutationFn: addEmployee,
+
       onError: error => {
          error.response.data?.errors.forEach(err => {
             setError(err.path, {
@@ -73,7 +74,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
                <Input autoFocus name='name' control={control} placeholder='Name*' />
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
-               <Input name='secret word' control={control} placeholder='Secret word' />
+               <Input name='secretWord' control={control} placeholder='Secret word' />
                <Input
                   type='date'
                   name='dateOfBirth'

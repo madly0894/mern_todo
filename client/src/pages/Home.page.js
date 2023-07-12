@@ -144,7 +144,6 @@ const HomePage = () => {
                         const isCheckedItem = selectedRowIds.some(id => id === employee.id);
                         const isCheckedAllItems = selectedRowIds.every(id => id !== employee.id);
                         const checkItemClass = isCheckedItem ? 'checkLine' : null;
-                        console.log('pages', pages);
 
                         return (
                            <tr
@@ -165,7 +164,7 @@ const HomePage = () => {
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>
                               <td className={checkItemClass}>{employee.patronymic}</td>
-                              <td className={checkItemClass}></td>
+                              <td className={checkItemClass}>{employee.secretWord}</td>
                               <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
                               <td className={checkItemClass}>{employee.age}</td>
                               <td>
