@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useSignOut } from '../hooks/useSignOut';
+import { deleteEmployee } from '../api/employees.api';
 import useUser from '../hooks/useUser';
 import { Confirm } from 'notiflix';
 import { useDeleteUser } from '../hooks/useDeleteUser';
@@ -19,12 +20,21 @@ const Header = () => {
    const location = useLocation();
 
    const { user } = useUser();
+   console.log(user);
 
    const signOutMutation = useSignOut();
+
+   const deleteUserMutation = useDeleteUser();
 
    const signOut = () => {
       Confirm.show('Sign out', 'Are you sure you want to sign out?', 'Yes', 'No', () => {
          signOutMutation();
+      });
+   };
+
+   const deleteUser = () => {
+      Confirm.show('Delete user', `Are you sure to delete ${user.username}?`, 'Yes', 'No', () => {
+         deleteUserMutation();
       });
    };
 
@@ -47,6 +57,9 @@ const Header = () => {
                   {user.name} (@{user.username})
                </p>
 
+               <button className='action delete-action' onClick={deleteUser}>
+                  Delete user
+               </button>
                <button className='action delete-action' onClick={signOut}>
                   Sign Out
                </button>
