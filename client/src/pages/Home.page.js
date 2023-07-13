@@ -111,6 +111,7 @@ const HomePage = () => {
                               onChange={e => onToggleAllRows(e.target.checked)}
                            />
                         </th>
+                        <th>Username</th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Patronymic</th>
@@ -145,6 +146,8 @@ const HomePage = () => {
                         const isCheckedAllItems = selectedRowIds.every(id => id !== employee.id);
                         const checkItemClass = isCheckedItem ? 'checkLine' : null;
 
+                        // const { username } = employee.user;
+
                         return (
                            <tr
                               key={employee.id}
@@ -161,6 +164,7 @@ const HomePage = () => {
                                     }
                                  />
                               </td>
+                              <td className={checkItemClass}>{employee.user.username}</td>
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>
                               <td className={checkItemClass}>{employee.patronymic}</td>
