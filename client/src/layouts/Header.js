@@ -20,7 +20,6 @@ const Header = () => {
    const location = useLocation();
 
    const { user } = useUser();
-   console.log(user);
 
    const signOutMutation = useSignOut();
 
