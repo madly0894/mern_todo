@@ -14,7 +14,7 @@ export default function useSignIn() {
       onSuccess: data => {
          // Invalidate and refetch
          Utils.setAccessToken(data.accessToken);
-         queryClient.setQueryData([QUERY_KEY.user], jwtDecode(data.token));
+         queryClient.setQueryData([QUERY_KEY.user], jwtDecode(data.accessToken));
          navigate('/');
       },
    });
