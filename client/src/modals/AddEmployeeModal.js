@@ -70,19 +70,26 @@ const AddEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <Input autoFocus name='name' control={control} placeholder='Name*' />
-               <Input name='surname' control={control} placeholder='Surname*' />
-               <Input name='patronymic' control={control} placeholder='Patronymic' />
-               <Input name='secretWord' control={control} placeholder='Secret word' />
-               <Input
-                  type='date'
-                  name='dateOfBirth'
-                  control={control}
-                  placeholder='Date of birth*'
-                  min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
-                  max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
-                  helperText='Birth date must be between 18 and 35 years ago'
-               />
+             <div className="top-line">
+               <div className="avatar-field">
+                  <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/>
+               </div>
+               
+                  <Input autoFocus name='name' control={control} placeholder='Name*' />
+               
+             </div>
+                  <Input name='surname' control={control} placeholder='Surname*' />
+                  <Input name='patronymic' control={control} placeholder='Patronymic' />
+                  <Input name='secretWord' control={control} placeholder='Secret word' />
+                  <Input
+                     type='date'
+                     name='dateOfBirth'
+                     control={control}
+                     placeholder='Date of birth*'
+                     min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
+                     max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
+                     helperText='Birth date must be between 18 and 35 years ago'
+                  />
             </div>
 
             <div className='modal-footer'>
