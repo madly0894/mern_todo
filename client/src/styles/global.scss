@@ -201,6 +201,16 @@ button.delete-action {
       .avatar-field {
          width: 80px;
          height: 80px;
+         border-radius: 50%;
+         //overflow: hidden;
+         display: flex;
+         align-items: center;
+         border: 1px solid $gray-black-color;
+         p {
+            font-size: 14px;
+            text-align: center;
+            color: $light-black-color;
+         }
          img {
             width: 100%;
             height: 100%;
@@ -211,7 +221,6 @@ button.delete-action {
             position: relative;
             width: 100%;
             height: 100%;
-            border: 1px solid #a29ab7;
             border-radius: 100%;
             .edit-av {
                display: flex;
@@ -234,10 +243,15 @@ button.delete-action {
       .top-line {
          display: flex;
          flex-direction: row;
-         align-items: center;
          gap: 10px;
-         .form-group {
-            flex: 4;
+         .main-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+            h3 {
+               font-weight: 500;
+            }
          }
       }
    }

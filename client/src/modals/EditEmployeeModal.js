@@ -88,7 +88,10 @@ const EditEmployeeModal = ({ show, onHide }) => {
                      )}
                   </div>
 
-                  <Input autoFocus name='name' control={control} placeholder='Name*' />
+                  <div className='main-block'>
+                     <h3>Main information</h3>
+                     <Input autoFocus name='name' control={control} placeholder='Name*' />
+                  </div>
                </div>
 
                <Input name='surname' control={control} placeholder='Surname*' />
