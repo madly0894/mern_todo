@@ -9,6 +9,7 @@ import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addEmployee } from '../api/employees.api';
 import Utils from '../utils';
+import Dropzone, { useDropzone } from 'react-dropzone';
 
 export const validateSchema = yup.object().shape({
    name: yup.string().required('Name field is required'),
@@ -49,6 +50,12 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
+   const onDrop = React.useCallback(acceptedFiles => {
+      console.log('file here');
+   }, []);
+
+   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
    return (
       <Modal
          isOpen={show}
@@ -70,26 +77,35 @@ const AddEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-             <div className="top-line">
-               <div className="avatar-field">
-                  <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/>
-               </div>
-               
+               <div className='top-line'>
+                  <div className='avatar-field' {...getRootProps()}>
+                     {/* <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/> */}
+                     <input {...getInputProps()} />
+                     {isDragActive ? (
+                        <p>Drop the files here...</p>
+                     ) : (
+                        <div className='avatar'>
+                           <span className='edit-av'>
+                              <i className='material-icons'>edit</i>
+                           </span>
+                        </div>
+                     )}
+                  </div>
+
                   <Input autoFocus name='name' control={control} placeholder='Name*' />
-               
-             </div>
-                  <Input name='surname' control={control} placeholder='Surname*' />
-                  <Input name='patronymic' control={control} placeholder='Patronymic' />
-                  <Input name='secretWord' control={control} placeholder='Secret word' />
-                  <Input
-                     type='date'
-                     name='dateOfBirth'
-                     control={control}
-                     placeholder='Date of birth*'
-                     min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
-                     max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
-                     helperText='Birth date must be between 18 and 35 years ago'
-                  />
+               </div>
+               <Input name='surname' control={control} placeholder='Surname*' />
+               <Input name='patronymic' control={control} placeholder='Patronymic' />
+               <Input name='secretWord' control={control} placeholder='Secret word' />
+               <Input
+                  type='date'
+                  name='dateOfBirth'
+                  control={control}
+                  placeholder='Date of birth*'
+                  min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
+                  max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
+                  helperText='Birth date must be between 18 and 35 years ago'
+               />
             </div>
 
             <div className='modal-footer'>

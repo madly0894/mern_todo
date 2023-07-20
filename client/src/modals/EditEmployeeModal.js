@@ -9,6 +9,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { editEmployee, getEmployee } from '../api/employees.api';
 import { defaultValues, validateSchema } from './AddEmployeeModal';
 import Utils from '../utils';
+import Dropzone, { useDropzone } from 'react-dropzone';
 
 const EditEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
@@ -45,6 +46,12 @@ const EditEmployeeModal = ({ show, onHide }) => {
       },
    });
 
+   const onDrop = React.useCallback(acceptedFiles => {
+      console.log('file here');
+   }, []);
+
+   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
    return (
       <Modal
          isOpen={!!show}
@@ -66,7 +73,24 @@ const EditEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <Input autoFocus name='name' control={control} placeholder='Name*' />
+               <div className='top-line'>
+                  <div className='avatar-field' {...getRootProps()}>
+                     {/* <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/> */}
+                     <input {...getInputProps()} />
+                     {isDragActive ? (
+                        <p>Drop the files here...</p>
+                     ) : (
+                        <div className='avatar'>
+                           <span className='edit-av'>
+                              <i className='material-icons'>edit</i>
+                           </span>
+                        </div>
+                     )}
+                  </div>
+
+                  <Input autoFocus name='name' control={control} placeholder='Name*' />
+               </div>
+
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
                <Input name='secretWord' control={control} placeholder='Secret word' />
