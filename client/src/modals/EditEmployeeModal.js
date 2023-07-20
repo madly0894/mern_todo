@@ -46,11 +46,31 @@ const EditEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const onDrop = React.useCallback(acceptedFiles => {
-      console.log('file here');
-   }, []);
+   const [files, setFiles] = React.useState([]);
 
-   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+      accept: 'image/*',
+      onDrop: acceptedFiles => {
+         setFiles(
+            acceptedFiles.map(file =>
+               Object.assign(file, {
+                  preview: URL.createObjectURL(file),
+               }),
+            ),
+         );
+      },
+   });
+
+   const thumbs = files.map(file => (
+      <div className='file-img' key={file.name}>
+         <img
+            src={file.preview}
+            onLoad={() => {
+               URL.revokeObjectURL(file.preview);
+            }}
+         />
+      </div>
+   ));
 
    return (
       <Modal
@@ -73,19 +93,16 @@ const EditEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <div className='top-line'>
-                  <div className='avatar-field' {...getRootProps()}>
-                     {/* <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/> */}
+               <div className='top-line' {...getRootProps()}>
+                  <div className='avatar-field'>
                      <input {...getInputProps()} />
-                     {isDragActive ? (
-                        <p>Drop the files here...</p>
-                     ) : (
-                        <div className='avatar'>
-                           <span className='edit-av'>
-                              <i className='material-icons'>edit</i>
-                           </span>
-                        </div>
-                     )}
+
+                     <div className='avatar'>
+                        {thumbs}
+                        <span className='edit-av'>
+                           <i className='material-icons'>edit</i>
+                        </span>
+                     </div>
                   </div>
 
                   <div className='main-block'>

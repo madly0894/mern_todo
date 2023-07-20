@@ -50,21 +50,31 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
+   const [files, setFiles] = React.useState([]);
+
    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
       accept: 'image/*',
-      // onDrop: acceptedFiles => {
-      //    setFiles(
-      //       acceptedFiles.map(file =>
-      //          Object.assign(file, {
-      //             preview: URL.createObjectURL(file),
-      //          }),
-      //       ),
-      //    );
-      // },
+      onDrop: acceptedFiles => {
+         setFiles(
+            acceptedFiles.map(file =>
+               Object.assign(file, {
+                  preview: URL.createObjectURL(file),
+               }),
+            ),
+         );
+      },
    });
 
-   const files = acceptedFiles.map(file => <li key={file.path}>{file.name}</li>);
-   console.log(files);
+   const thumbs = files.map(file => (
+      <div className='file-img' key={file.name}>
+         <img
+            src={file.preview}
+            onLoad={() => {
+               URL.revokeObjectURL(file.preview);
+            }}
+         />
+      </div>
+   ));
 
    return (
       <Modal
@@ -89,16 +99,15 @@ const AddEmployeeModal = ({ show, onHide }) => {
             <div className='modal-content'>
                <div className='top-line' {...getRootProps()}>
                   <div className='avatar-field'>
-                     {/* <img src="https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80" alt="avatar"/> */}
                      <input {...getInputProps()} />
 
                      <div className='avatar'>
+                        {thumbs}
                         <span className='edit-av'>
                            <i className='material-icons'>edit</i>
                         </span>
                      </div>
                   </div>
-                  <div>{files}</div>
 
                   <div className='main-block'>
                      <h3>Main information</h3>
