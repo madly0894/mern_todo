@@ -93,8 +93,8 @@ const EditEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <div className='top-line' {...getRootProps()}>
-                  <div className='avatar-field'>
+               <div className='top-line'>
+                  <div className='avatar-field' {...getRootProps()}>
                      <input {...getInputProps()} />
 
                      <div className='avatar'>

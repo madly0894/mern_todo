@@ -1,30 +1,31 @@
 const Employee = require('../models/Employee');
-const UserDto = require('../dtos/user.dto');
 const EmployeeDto = require('../dtos/employee.dto');
-const { getAge } = require('../utils');
+const { getAge, deleteFile } = require('../helpers/utils');
 
 class EmployeeController {
    async getEmployees(req, res) {
       try {
          const { page = 1, limit = 15 } = req.body;
 
-         const totalItems = await Employee.countDocuments({ userId: req.user.id });
+         const totalItems = await Employee.countDocuments({
+            userId: req.user.id,
+         });
          const totalPages = Math.ceil(totalItems / limit);
-
          const skip = (page - 1) * limit;
 
          const employees = await Employee.find({ userId: req.user.id })
             .skip(skip)
             .limit(limit)
             .sort({ _id: 'desc' })
-            .populate('userId');
+            .transform(doc =>
+               doc.map(employee => ({
+                  ...new EmployeeDto(employee),
+                  picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
+               })),
+            );
 
          res.status(200).json({
-            data: employees.map(employee => ({
-               ...new EmployeeDto(employee),
-               userId: employee.userId._id,
-               user: new UserDto(employee.userId),
-            })),
+            data: employees,
             currentPage: page,
             totalPages,
             totalItems,
@@ -38,11 +39,9 @@ class EmployeeController {
 
    async getEmployee(req, res) {
       try {
-         const employee = await Employee.findById(req.params.id);
+         const employee = await Employee.findById(req.params.id).transform(doc => new EmployeeDto(doc));
 
-         const employeeDto = new EmployeeDto(employee);
-
-         res.status(200).json(employeeDto);
+         res.status(200).json(employee);
       } catch (e) {
          res.status(500).json({ message: 'Something went wrong, please try again' });
       }
@@ -50,16 +49,16 @@ class EmployeeController {
 
    async createEmployee(req, res) {
       try {
-         const { name, surname, patronymic = '', secretWord = '', dateOfBirth } = req.body;
+         const { name, surname, patronymic = '', dateOfBirth } = req.body;
 
          await Employee.create({
             userId: req.user.id,
             name,
             surname,
             patronymic,
-            secretWord,
             dateOfBirth,
             age: getAge(dateOfBirth),
+            picturePath: req.file?.filename ?? null,
          });
 
          res.status(201).json({ message: 'Employee successfully added' });
@@ -70,7 +69,13 @@ class EmployeeController {
 
    async editEmployee(req, res) {
       try {
-         const { name, surname, patronymic = '', secretWord = '', dateOfBirth } = req.body;
+         const { name, surname, patronymic = '', dateOfBirth } = req.body;
+
+         const employee = await Employee.findById(req.params.id);
+
+         if (employee.picturePath) {
+            deleteFile(employee.picturePath);
+         }
 
          await Employee.updateOne(
             { _id: req.params.id },
@@ -78,9 +83,9 @@ class EmployeeController {
                name,
                surname,
                patronymic,
-               secretWord,
                dateOfBirth,
                age: getAge(dateOfBirth),
+               picturePath: req.file?.filename ?? null,
             },
          );
 

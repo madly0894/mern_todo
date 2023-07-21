@@ -9,11 +9,11 @@ module.exports = (req, res, next) => {
       }
 
       const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET);
+
       req.user = decodedToken;
 
       next();
    } catch {
-      res.clearCookie('accessToken');
       res.status(401).json({ message: 'Invalid Token' });
    }
 };

@@ -6,6 +6,7 @@ import queryClient from '../helpers/queryClient';
 import Utils from '../helpers/utils';
 
 const $api = axios.create({
+   withCredentials: true,
    baseURL: process.env.REACT_APP_API_URL,
 });
 
@@ -14,10 +15,6 @@ $api.interceptors.request.use(config => {
 
    if (config?.notify) {
       Block.hourglass(config?.notify, 'Please wait...');
-   }
-
-   if (!Utils.getAccessToken() || config.withoutAuthorization) {
-      delete config.headers.Authorization;
    }
 
    return config;
