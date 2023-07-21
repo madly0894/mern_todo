@@ -2,14 +2,14 @@ import * as React from 'react';
 import * as dayjs from 'dayjs';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
 import Input from '../components/Input';
-import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { editEmployee, getEmployee } from '../api/employees.api';
 import { defaultValues, validateSchema } from './AddEmployeeModal';
-import Utils from '../utils';
-import Dropzone, { useDropzone } from 'react-dropzone';
+import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 const EditEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();

@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useSignOut } from '../hooks/useSignOut';
-import { deleteEmployee } from '../api/employees.api';
-import useUser from '../hooks/useUser';
 import { Confirm } from 'notiflix';
+import { useSignOut } from '../hooks/useSignOut';
+import useUser from '../hooks/useUser';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 
 const pathname = {

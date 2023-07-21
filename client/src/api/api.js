@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { Block, Notify } from 'notiflix';
-import Utils from '../utils';
+import { QUERY_KEY } from '../helpers/constants';
+import history from '../helpers/history';
+import queryClient from '../helpers/queryClient';
+import Utils from '../helpers/utils';
 
 const $api = axios.create({
    baseURL: process.env.REACT_APP_API_URL,
@@ -43,6 +46,12 @@ $api.interceptors.response.use(
 
       if (err?.response) {
          Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
+
+         if (err.response.status === 401) {
+            Utils.removeAccessToken();
+            queryClient.setQueryData([QUERY_KEY.user], null);
+            history.push('/auth/sign-in');
+         }
 
          throw err;
       }

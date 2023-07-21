@@ -1,6 +1,6 @@
 import $api from './api';
-import { QUERY_KEY } from '../constants';
-import Utils from '../utils';
+import { QUERY_KEY } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 export const signUp = async body => {
    const response = await $api.post(`${QUERY_KEY.auth}/sign-up`, body, {

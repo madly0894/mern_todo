@@ -3,13 +3,13 @@ import * as dayjs from 'dayjs';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
 import Input from '../components/Input';
-import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../constants';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addEmployee } from '../api/employees.api';
-import Utils from '../utils';
-import Dropzone, { useDropzone } from 'react-dropzone';
+import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 export const validateSchema = yup.object().shape({
    name: yup.string().required('Name field is required'),
