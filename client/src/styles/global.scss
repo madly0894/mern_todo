@@ -127,6 +127,7 @@ button.delete-action {
 }
 
 .form-group {
+   width: 100%;
    input {
       background-color: transparent;
       border: 1px solid $gray-black-color;
@@ -195,6 +196,70 @@ button.delete-action {
             width: 100%;
             height: 39px !important;
             font-size: 15px;
+         }
+      }
+      .avatar-field {
+         width: 80px;
+         height: 80px;
+         border-radius: 50%;
+         //overflow: hidden;
+         display: flex;
+         align-items: center;
+         border: 1px solid $gray-black-color;
+         p {
+            font-size: 14px;
+            text-align: center;
+            color: $light-black-color;
+         }
+         img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 100%;
+         }
+         .avatar {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 100%;
+            .edit-av {
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               width: 24px;
+               height: 24px;
+               position: absolute;
+               bottom: 0;
+               right: 0;
+               z-index: 9;
+               border-radius: 100%;
+               background-color: #463c61;
+               .material-icons {
+                  color: #ffffff;
+               }
+            }
+         }
+      }
+      .top-line {
+         display: flex;
+         flex-direction: row;
+         gap: 10px;
+         .main-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex: 1;
+            h3 {
+               font-weight: 500;
+            }
+         }
+         .file-img {
+            height: 100%;
+            img {
+               width: 100%;
+               height: 100%;
+               object-fit: cover;
+            }
          }
       }
    }

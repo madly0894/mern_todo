@@ -1,16 +1,16 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Notify } from 'notiflix';
 import Modal from 'react-modal';
+import history from './helpers/history';
+import queryClient from './helpers/queryClient';
+
+import App from './App';
+import BrowserRouter from './BrowserRouter';
 
 import './styles/index.scss';
-import App from './App';
-import { Notify } from 'notiflix';
-
-// Create a client
-const queryClient = new QueryClient();
 
 // The "init()" function can be used to set custom options as globally.
 Notify.init({
@@ -25,7 +25,7 @@ Modal.setAppElement('#root');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-   <BrowserRouter basename='/' future={{ v7_startTransition: true }}>
+   <BrowserRouter basename='/' history={history}>
       <QueryClientProvider client={queryClient}>
          {/*Provide the client to your App*/}
          <App />

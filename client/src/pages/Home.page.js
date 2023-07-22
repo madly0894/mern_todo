@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as dayjs from 'dayjs';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInView } from 'react-cool-inview';
+import { Confirm } from 'notiflix';
 import { deleteEmployee, deleteEmployees, getEmployees } from '../api/employees.api';
 import AddEmployeeModal from '../modals/AddEmployeeModal';
 import EditEmployeeModal from '../modals/EditEmployeeModal';
-import { QUERY_KEY, DATE_CELL_FORMAT } from '../constants';
-import { Confirm } from 'notiflix';
-import { useInView } from 'react-cool-inview';
-import Utils from '../utils';
+import { QUERY_KEY, DATE_CELL_FORMAT } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 const HomePage = () => {
    const queryClient = useQueryClient();
@@ -111,11 +111,9 @@ const HomePage = () => {
                               onChange={e => onToggleAllRows(e.target.checked)}
                            />
                         </th>
-                        <th>Username</th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Patronymic</th>
-                        <th>Secret word</th>
                         <th>Date of birth</th>
                         <th>Age</th>
                         <th>
@@ -164,11 +162,9 @@ const HomePage = () => {
                                     }
                                  />
                               </td>
-                              <td className={checkItemClass}>{employee.user.username}</td>
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>
                               <td className={checkItemClass}>{employee.patronymic}</td>
-                              <td className={checkItemClass}>{employee.secretWord}</td>
                               <td className={checkItemClass}>{dayjs(employee.dateOfBirth).format(DATE_CELL_FORMAT)}</td>
                               <td className={checkItemClass}>{employee.age}</td>
                               <td>

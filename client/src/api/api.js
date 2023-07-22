@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { Block, Notify } from 'notiflix';
-import Utils from '../utils';
+import { QUERY_KEY } from '../helpers/constants';
+import history from '../helpers/history';
+import queryClient from '../helpers/queryClient';
+import Utils from '../helpers/utils';
 
 const $api = axios.create({
+   withCredentials: true,
    baseURL: process.env.REACT_APP_API_URL,
 });
 
@@ -11,10 +15,6 @@ $api.interceptors.request.use(config => {
 
    if (config?.notify) {
       Block.hourglass(config?.notify, 'Please wait...');
-   }
-
-   if (!Utils.getAccessToken() || config.withoutAuthorization) {
-      delete config.headers.Authorization;
    }
 
    return config;
@@ -43,6 +43,12 @@ $api.interceptors.response.use(
 
       if (err?.response) {
          Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
+
+         if (err.response.status === 401) {
+            Utils.removeAccessToken();
+            queryClient.setQueryData([QUERY_KEY.user], null);
+            history.push('/auth/sign-in');
+         }
 
          throw err;
       }

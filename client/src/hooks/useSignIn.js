@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
 import { signIn } from '../api/auth.api';
-import { QUERY_KEY } from '../constants';
-import Utils from '../utils';
+import { QUERY_KEY } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 export default function useSignIn() {
    const queryClient = useQueryClient();

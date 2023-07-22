@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import jwtDecode from 'jwt-decode';
-import { QUERY_KEY } from '../constants';
-import Utils from '../utils';
+import { QUERY_KEY } from '../helpers/constants';
+import Utils from '../helpers/utils';
 
 export default function useUser() {
    const accessToken = Utils.getAccessToken();

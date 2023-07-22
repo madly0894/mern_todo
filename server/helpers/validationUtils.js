@@ -1,5 +1,5 @@
-const validate = require('./middlewares/validate.middleware');
 const { body } = require('express-validator');
+const validate = require('../middlewares/validate.middleware');
 
 const employeeValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),

@@ -1,5 +1,5 @@
 import $api from './api';
-import { QUERY_KEY } from '../constants';
+import { QUERY_KEY } from '../helpers/constants';
 
 export const getEmployees = async params => {
    const response = await $api.get(QUERY_KEY.employees, {
@@ -19,12 +19,10 @@ export const getEmployee = async id => {
 
    return response.data;
 };
-export const addEmployee = body => {
+export const addEmployee = body =>
    $api.post(`${QUERY_KEY.employees}/add`, body, {
       notify: '.ReactModal__Content',
    });
-};
-
 export const editEmployee = ({ id, body }) =>
    $api.put(`${QUERY_KEY.employees}/${id}/edit`, body, {
       notify: '.ReactModal__Content',
