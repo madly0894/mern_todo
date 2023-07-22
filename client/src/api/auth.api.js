@@ -26,3 +26,10 @@ export const signOut = async () => {
    );
    return response.data;
 };
+
+export const refresh = async () => {
+   const response = await $api.get(`${QUERY_KEY.auth}/refresh`, {
+      Authorization: null,
+   });
+   return response.data;
+};

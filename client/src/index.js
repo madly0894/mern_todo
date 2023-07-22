@@ -11,13 +11,14 @@ import App from './App';
 import BrowserRouter from './BrowserRouter';
 
 import './styles/index.scss';
+import Auth from './Auth';
 
 // The "init()" function can be used to set custom options as globally.
 Notify.init({
    width: '300px',
    position: 'right-bottom',
    closeButton: false,
-   timeout: 1500,
+   timeout: 3500,
 });
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
@@ -28,7 +29,9 @@ root.render(
    <BrowserRouter basename='/' history={history}>
       <QueryClientProvider client={queryClient}>
          {/*Provide the client to your App*/}
-         <App />
+         <Auth>
+            <App />
+         </Auth>
          {/* The rest of your application */}
          <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

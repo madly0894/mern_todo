@@ -3,45 +3,57 @@ const TokenModel = require('../models/Token.model');
 
 class TokenService {
    generateTokens(payload) {
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
-      // const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {expiresIn: '30s'})
+      const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: '15m' });
+      const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30m' });
       return {
          accessToken,
-         // refreshToken
+         refreshToken,
       };
    }
 
-   verifyAccessToken(accessToken) {
+   validateAccessToken(token) {
       try {
-         const userData = jwt.verify(accessToken, process.env.JWT_SECRET);
+         const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
          return userData;
       } catch (e) {
          return null;
       }
    }
 
-   async saveToken(userId, accessToken) {
-      const tokens = await TokenModel.find({ userId });
-
-      for (const token of tokens) {
-         const decodedToken = this.verifyAccessToken(token.accessToken);
-
-         if (!decodedToken) {
-            await TokenModel.deleteOne({ accessToken: token.accessToken });
-         }
+   validateRefreshToken(token) {
+      try {
+         const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+         return userData;
+      } catch (e) {
+         return null;
       }
+   }
 
-      const token = await TokenModel.create({ userId, accessToken });
+   async saveToken(userId, refreshToken) {
+      // const tokens = await TokenModel.find({ userId });
+      // for (const token of tokens) {
+      //    const decodedToken = this.validateRefreshToken(token.refreshToken);
+      //
+      //    if (!decodedToken) {
+      //       await TokenModel.deleteOne({ refreshToken: token.accessToken });
+      //    }
+      // }
+      const tokenData = await TokenModel.findOne({ userId });
+      if (tokenData) {
+         tokenData.refreshToken = refreshToken;
+         return tokenData.save();
+      }
+      const token = await TokenModel.create({ userId, refreshToken });
       return token;
    }
 
-   async removeToken(accessToken) {
-      const tokenData = await TokenModel.deleteOne({ accessToken });
+   async removeToken(refreshToken) {
+      const tokenData = await TokenModel.deleteOne({ refreshToken });
       return tokenData;
    }
 
-   async findToken(accessToken) {
-      const tokenData = await TokenModel.findOne({ accessToken });
+   async findToken(refreshToken) {
+      const tokenData = await TokenModel.findOne({ refreshToken });
       return tokenData;
    }
 }

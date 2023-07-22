@@ -6,17 +6,14 @@ class EmployeeController {
    async getEmployees(req, res, next) {
       try {
          const { page = 1, limit = 15 } = req.body;
-
          const totalItems = await EmployeeModel.countDocuments({ userId: req.user.id });
          const totalPages = Math.ceil(totalItems / limit);
          const skip = (page - 1) * limit;
-
          const employees = await EmployeeModel.find({ userId: req.user.id })
             .skip(skip)
             .limit(limit)
             .sort({ _id: 'desc' });
-
-         res.status(200).json({
+         return res.status(200).json({
             data: employees.map(employee => ({
                ...new EmployeeDto(employee),
                picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
@@ -35,10 +32,8 @@ class EmployeeController {
    async getEmployee(req, res, next) {
       try {
          const employee = await EmployeeModel.findById(req.params.id);
-
          const employeeDto = new EmployeeDto(employee);
-
-         res.status(200).json(employeeDto);
+         return res.status(200).json(employeeDto);
       } catch (e) {
          next(e);
       }
@@ -47,7 +42,6 @@ class EmployeeController {
    async createEmployee(req, res, next) {
       try {
          const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
          await EmployeeModel.create({
             userId: req.user.id,
             name,
@@ -57,8 +51,7 @@ class EmployeeController {
             age: getAge(dateOfBirth),
             picturePath: req.file?.filename ?? null,
          });
-
-         res.status(201).json({ message: 'Employee successfully added' });
+         return res.status(201).json({ message: 'Employee successfully added' });
       } catch (e) {
          next(e);
       }
@@ -67,15 +60,11 @@ class EmployeeController {
    async editEmployee(req, res, next) {
       try {
          const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
          const employee = await EmployeeModel.findById(req.params.id);
-
          const picture = employee.picturePath;
-
          if (picture) {
             deleteFile(picture);
          }
-
          await EmployeeModel.updateOne(
             { _id: req.params.id },
             {
@@ -87,8 +76,7 @@ class EmployeeController {
                picturePath: req.file?.filename ?? null,
             },
          );
-
-         res.status(200).json({ message: 'Employee successfully updated' });
+         return res.status(200).json({ message: 'Employee successfully updated' });
       } catch (e) {
          next(e);
       }
@@ -97,8 +85,7 @@ class EmployeeController {
    async deleteEmployee(req, res, next) {
       try {
          await EmployeeModel.deleteOne({ _id: req.params.id });
-
-         res.status(200).json({ message: 'Employee successfully deleted' });
+         return res.status(200).json({ message: 'Employee successfully deleted' });
       } catch (e) {
          next(e);
       }
@@ -107,8 +94,7 @@ class EmployeeController {
    async deleteEmployees(req, res, next) {
       try {
          await EmployeeModel.deleteMany({ _id: { $in: req.query.ids } });
-
-         res.status(200).json({ message: 'Users successfully deleted' });
+         return res.status(200).json({ message: 'Users successfully deleted' });
       } catch (e) {
          next(e);
       }

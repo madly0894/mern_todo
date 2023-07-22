@@ -44,11 +44,11 @@ $api.interceptors.response.use(
       if (err?.response) {
          Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
 
-         if (err.response.status === 401) {
-            Utils.removeAccessToken();
-            queryClient.setQueryData([QUERY_KEY.user], null);
-            history.push('/auth/sign-in');
-         }
+         // if (err.response.status === 401) {
+         //    Utils.removeAccessToken();
+         //    queryClient.setQueryData([QUERY_KEY.user], null);
+         //    history.push('/auth/sign-in');
+         // }
 
          throw err;
       }

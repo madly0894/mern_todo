@@ -2,8 +2,10 @@ import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Confirm } from 'notiflix';
 import { useSignOut } from '../hooks/useSignOut';
-import useUser from '../hooks/useUser';
 import { useDeleteUser } from '../hooks/useDeleteUser';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '../helpers/constants';
+import useUser from '../hooks/useUser';
 
 const pathname = {
    '/': (
@@ -18,7 +20,7 @@ const pathname = {
 const Header = () => {
    const location = useLocation();
 
-   const { user } = useUser();
+   const user = useUser();
 
    const signOutMutation = useSignOut();
 
