@@ -1,15 +1,14 @@
-const User = require('../models/User');
+const UserModel = require('../models/User.model');
 const UserDto = require('../dtos/user.dto');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Token = require('../models/Token');
+const tokenService = require('../services/token.service');
 
 class AuthController {
    async signUp(req, res, next) {
       try {
          const { name, username, password } = req.body;
 
-         const candidate = await User.findOne({ username });
+         const candidate = await UserModel.findOne({ username });
 
          if (candidate) {
             return res.status(409).json({ message: 'Username already taken' });
@@ -17,7 +16,7 @@ class AuthController {
 
          const hashedPassword = await bcrypt.hash(password, 12);
 
-         const user = await User.create({
+         const user = await UserModel.create({
             name,
             username,
             password: hashedPassword,
@@ -25,15 +24,13 @@ class AuthController {
 
          const userDto = new UserDto(user);
 
-         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
-         });
+         const { accessToken } = tokenService.generateTokens({ ...userDto });
 
-         await Token.create({ accessToken });
+         await tokenService.saveToken(userDto.id, accessToken);
 
          res.status(201).json({ accessToken, message: 'You have successfully registered' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
@@ -41,7 +38,7 @@ class AuthController {
       try {
          const { username, password } = req.body;
 
-         const user = await User.findOne({ username });
+         const user = await UserModel.findOne({ username });
 
          if (!user) {
             return res.status(400).json({ message: 'User not found' });
@@ -55,15 +52,13 @@ class AuthController {
 
          const userDto = new UserDto(user);
 
-         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
-         });
+         const { accessToken } = tokenService.generateTokens({ ...userDto });
 
-         await Token.create({ accessToken });
+         await tokenService.saveToken(userDto.id, accessToken);
 
          res.status(200).json({ accessToken, message: 'You have successfully logged in' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
@@ -71,11 +66,11 @@ class AuthController {
       try {
          const { accessToken } = req.body;
 
-         await Token.deleteOne({ accessToken });
+         await tokenService.removeToken(accessToken);
 
          res.status(200).json({ message: 'You have successfully logged out' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 }

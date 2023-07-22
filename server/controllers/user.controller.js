@@ -1,31 +1,31 @@
-const User = require('../models/User');
+const UserModel = require('../models/User.model');
 const UserDto = require('../dtos/user.dto');
-const Token = require('../models/Token');
+const tokenService = require('../services/token.service');
 
 class UserController {
-   async getUser(req, res) {
+   async getUser(req, res, next) {
       try {
-         const user = await User.findById(req.user.id);
+         const user = await UserModel.findById(req.user.id);
 
          const userDto = new UserDto(user);
 
          res.status(200).json(userDto);
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
-   async deleteUser(req, res) {
+   async deleteUser(req, res, next) {
       try {
          const accessToken = req.headers.authorization.split(' ')[1]; // "Bearer TOKEN"
 
-         await User.deleteOne({ _id: req.user.id });
+         await UserModel.deleteOne({ _id: req.user.id });
 
-         await Token.deleteOne({ accessToken });
+         await tokenService.removeToken(accessToken);
 
          res.status(200).json({ message: 'User successfully deleted' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 }

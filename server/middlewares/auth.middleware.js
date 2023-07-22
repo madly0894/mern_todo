@@ -1,19 +1,29 @@
-const jwt = require('jsonwebtoken');
+const ApiError = require('../exceptions/api-error');
+const tokenService = require('../services/token.service');
 
 module.exports = (req, res, next) => {
    try {
-      const accessToken = req.headers.authorization.split(' ')[1]; // "Bearer TOKEN"
+      const authorizationHeader = req.headers.authorization;
 
-      if (!accessToken) {
-         return res.status(403).json({ message: 'A accessToken is required for authentication' });
+      if (!authorizationHeader) {
+         return next(ApiError.UnauthorizedError());
       }
 
-      const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET);
+      const accessToken = authorizationHeader.split(' ')[1]; // "Bearer TOKEN"
+
+      if (!accessToken) {
+         return next(ApiError.UnauthorizedError('A accessToken is required for authentication'));
+      }
+
+      const decodedToken = tokenService.verifyAccessToken(accessToken);
+
+      if (!decodedToken) {
+         return next(ApiError.UnauthorizedError('Token is expired'));
+      }
 
       req.user = decodedToken;
-
       next();
    } catch {
-      res.status(401).json({ message: 'Invalid Token' });
+      return next(ApiError.UnauthorizedError());
    }
 };

@@ -5,7 +5,7 @@ const {
    signInValidationSchema,
    signUpValidationSchema,
    signOutValidationSchema,
-} = require('../helpers/validationUtils');
+} = require('../helpers/validationSchemas');
 
 router.post('/sign-up', signUpValidationSchema, authController.signUp);
 router.post('/sign-in', signInValidationSchema, authController.signIn);

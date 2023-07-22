@@ -1,5 +1,6 @@
 const multer = require('multer');
 const uuid = require('uuid');
+const ApiError = require('../exceptions/api-error');
 const { getFileExt } = require('../helpers/utils');
 const { FILE_TYPES } = require('../helpers/constants');
 
@@ -17,7 +18,7 @@ const multerFilter = (req, file, cb) => {
    if (FILE_TYPES.includes(getFileExt(file.originalname))) {
       cb(null, true);
    } else {
-      cb(new Error('Only .png, .jpg and .jpeg format allowed'), false);
+      cb(ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]), false);
    }
 };
 

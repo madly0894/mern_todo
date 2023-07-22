@@ -20,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // routers
 app.use('/api', require('./router'));
+app.use(require('./middlewares/error.middleware'));
 
 // if (process.env.NODE_ENV === 'production') {
 //    app.use(express.static(path.join(__dirname, 'client', 'build')));
