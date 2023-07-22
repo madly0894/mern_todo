@@ -3,15 +3,6 @@ const UserDto = require('../dtos/user.dto');
 const tokenService = require('../services/token.service');
 
 class UserController {
-   async getUsers(req, res, next) {
-      try {
-         const users = await UserModel.find();
-         return res.json(users);
-      } catch (e) {
-         next(e);
-      }
-   }
-
    async getUser(req, res, next) {
       try {
          const user = await UserModel.findById(req.user.id);

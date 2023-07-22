@@ -18,9 +18,10 @@ const pathname = {
 };
 
 const Header = () => {
+   const queryClient = useQueryClient();
    const location = useLocation();
 
-   const user = useUser();
+   const user = queryClient.getQueryData([QUERY_KEY.user]);
 
    const signOutMutation = useSignOut();
 

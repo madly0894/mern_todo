@@ -1,10 +1,20 @@
-import * as React from 'react';
-import { AuthContext } from '../Auth';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEY } from '../helpers/constants';
+import Utils from '../helpers/utils';
+import { getUser } from '../api/user.api';
 
 export default function useUser() {
-   const context = React.useContext(AuthContext);
-   if (context === undefined) {
-      throw new Error('...');
-   }
-   return context;
+   return useQuery({
+      queryKey: [QUERY_KEY.user],
+      queryFn: getUser,
+      retry: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      // onError: () => {
+      //    Utils.removeAccessToken();
+      // },
+      enabled: !!Utils.getAccessToken(),
+      keepPreviousData: true,
+   });
 }

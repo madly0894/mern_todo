@@ -1,6 +1,7 @@
 import $api from './api';
 import { QUERY_KEY } from '../helpers/constants';
 import Utils from '../helpers/utils';
+import jwtDecode from 'jwt-decode';
 
 export const signUp = async body => {
    const response = await $api.post(`${QUERY_KEY.auth}/sign-up`, body, {
@@ -31,5 +32,6 @@ export const refresh = async () => {
    const response = await $api.get(`${QUERY_KEY.auth}/refresh`, {
       Authorization: null,
    });
-   return response.data;
+   const user = jwtDecode(response.data.accessToken);
+   return user;
 };

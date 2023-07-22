@@ -37,20 +37,31 @@ $api.interceptors.response.use(
       return config;
    },
    async err => {
-      if (err.config?.notify) {
+      const originalRequest = err?.config;
+
+      if (originalRequest.notify) {
          Block.remove(err.config.notify);
       }
 
       if (err?.response) {
-         Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
+         if (err.response.status === 401 && !originalRequest._isRetry) {
+            originalRequest._isRetry = true;
+            try {
+               const response = await axios.get(`${process.env.REACT_APP_API_URL}${QUERY_KEY.auth}/refresh`, {
+                  withCredentials: true,
+               });
+               localStorage.setItem('token', response.data.accessToken);
+               originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
+               return axios(originalRequest);
+            } catch (e) {
+               Utils.removeAccessToken();
+               queryClient.setQueryData([QUERY_KEY.user], null);
+               history.push('/auth/sign-in');
+               Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
+            }
 
-         // if (err.response.status === 401) {
-         //    Utils.removeAccessToken();
-         //    queryClient.setQueryData([QUERY_KEY.user], null);
-         //    history.push('/auth/sign-in');
-         // }
-
-         throw err;
+            throw err;
+         }
       }
 
       Notify.failure(err.message);
