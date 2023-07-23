@@ -44,9 +44,10 @@ $api.interceptors.response.use(
          } else {
             Notify.failure(err.response.data?.message || `${err.response.status}: ${err.response.statusText}`);
          }
-         throw err;
+      } else {
+         Notify.failure(err.message);
       }
-      Notify.failure(err.message);
+
       throw err;
    },
 );
