@@ -2,9 +2,9 @@ import * as React from 'react';
 import useUser from './hooks/useUser';
 
 const Authorization = ({ children }) => {
-   const { isFetching } = useUser();
+   const { isFetching, isError } = useUser();
 
-   if (isFetching) {
+   if (isFetching || isError) {
       return null;
    }
 
