@@ -1,12 +1,14 @@
 const fs = require('fs');
 const path = require('path');
+const { DIR } = require('./constants');
+
 const getAge = date => new Date().getFullYear() - new Date(date).getFullYear();
 const getFileExt = filePath => path.extname(filePath);
 const deleteFile = filePath => {
-   const file = path.join(process.cwd(), 'public', 'images', filePath);
+   const dir = DIR + filePath;
 
-   if (fs.existsSync(file)) {
-      fs.unlink(file, err => {
+   if (fs.existsSync(dir)) {
+      fs.unlink(dir, err => {
          if (err) {
             throw err;
          }

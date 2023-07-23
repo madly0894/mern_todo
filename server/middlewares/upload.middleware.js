@@ -1,13 +1,21 @@
+const fs = require('fs');
 const multer = require('multer');
 const uuid = require('uuid');
 const ApiError = require('../exceptions/api-error');
 const { getFileExt } = require('../helpers/utils');
-const { FILE_TYPES } = require('../helpers/constants');
+const { FILE_TYPES, DIR } = require('../helpers/constants');
 
 //Configuration for Multer
 const multerStorage = multer.diskStorage({
    destination: (req, file, cb) => {
-      cb(null, 'public/images/');
+      if (!fs.existsSync(DIR)) {
+         fs.mkdir(DIR, err => {
+            if (err) {
+               throw err;
+            }
+         });
+      }
+      cb(null, DIR);
    },
    filename: (req, file, cb) => {
       cb(null, uuid.v4() + getFileExt(file.originalname));
