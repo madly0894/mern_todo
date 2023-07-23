@@ -4,26 +4,25 @@ import { Confirm } from 'notiflix';
 import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY } from '../helpers/constants';
+import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
 
-const pathname = {
-   '/': (
+const pathnames = {
+   [NAVIGATOR_KEYS.BASE_URL]: (
       <>
          List of <span className='inline-text'>Employees</span>
       </>
    ),
-   '/auth/sign-in': 'Sign In',
-   '/auth/sign-up': 'Sign Up',
+   [NAVIGATOR_KEYS.SIGN_IN]: 'Sign In',
+   [NAVIGATOR_KEYS.SIGN_UP]: 'Sign Up',
 };
 
 const Header = () => {
    const queryClient = useQueryClient();
    const location = useLocation();
 
-   const user = queryClient.getQueryData([QUERY_KEY.user]);
+   const user = queryClient.getQueryData([QUERY_KEYS.USER]);
 
    const signOutMutation = useSignOut();
-
    const deleteUserMutation = useDeleteUser();
 
    const signOut = () => {
@@ -40,15 +39,15 @@ const Header = () => {
 
    return (
       <header>
-         <h1 className='title'>{pathname[location.pathname]}</h1>
+         <h1 className='title'>{pathnames[location.pathname]}</h1>
 
          {!user ? (
             <ul className='right-block'>
                <li>
-                  <NavLink to='/auth/sign-in'>Sign In</NavLink>
+                  <NavLink to={NAVIGATOR_KEYS.SIGN_IN}>Sign In</NavLink>
                </li>
                <li>
-                  <NavLink to='/auth/sign-up'>Sign Up</NavLink>
+                  <NavLink to={NAVIGATOR_KEYS.SIGN_UP}>Sign Up</NavLink>
                </li>
             </ul>
          ) : (

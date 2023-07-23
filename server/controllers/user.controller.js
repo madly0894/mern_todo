@@ -1,6 +1,7 @@
 const UserModel = require('../models/User.model');
 const UserDto = require('../dtos/user.dto');
 const tokenService = require('../services/token.service');
+const ApiError = require('../exceptions/api-error');
 
 class UserController {
    async getUser(req, res, next) {
@@ -16,6 +17,9 @@ class UserController {
    async deleteUser(req, res, next) {
       try {
          const { refreshToken } = req.cookies;
+         if (!refreshToken) {
+            throw ApiError.UnauthorizedError('A refresh token is required for refreshing');
+         }
          await UserModel.deleteOne({ _id: req.user.id });
          await tokenService.removeToken(refreshToken);
          res.clearCookie('refreshToken');

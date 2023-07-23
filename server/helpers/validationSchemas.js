@@ -1,7 +1,5 @@
 const { body } = require('express-validator');
 const validate = require('../middlewares/validate.middleware');
-const { getFileExt } = require('./utils');
-const { FILE_TYPES } = require('./constants');
 
 const employeeValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
@@ -26,39 +24,28 @@ const employeeValidationSchema = validate([
                currentDate.getMonth() === birthDate.getMonth() &&
                currentDate.getDate() > birthDate.getDate())
          ) {
-            throw new Error('Birth date must be between 18 and 35 years ago');
+            throw new Error('Birth date must be between 18 and 45 years ago');
          }
 
          return true;
       })
       .notEmpty()
       .withMessage('Date of birth field is required'),
-   // body('picture').custom((value, { req }) => {
-   //    const file = req.file;
-   //
-   //    if (!!file) {
-   //       const isImage = FILE_TYPES.includes(getFileExt(file.originalname));
-   //
-   //       if (!isImage) {
-   //          throw new Error('Only .png, .jpg and .jpeg format allowed');
-   //       }
-   //    }
-   //
-   //    return true;
-   // }),
 ]);
 
 const signUpValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
-   body('username').notEmpty().withMessage('Username field is required'),
+   body('username').notEmpty().withMessage('Username field is required').trim(),
    body('password')
       .notEmpty()
       .withMessage('Password field is required')
+      .trim()
       .isLength({ min: 6 })
       .withMessage('Password must contain at least 6 characters'),
    body('passwordConfirmation')
       .notEmpty()
       .withMessage('Password field is required')
+      .trim()
       .custom((value, { req }) => value === req.body.password)
       .withMessage('The passwords do not match'),
 ]);
@@ -72,6 +59,4 @@ const signInValidationSchema = validate([
       .withMessage('Password must contain at least 6 characters'),
 ]);
 
-const signOutValidationSchema = validate([body('accessToken').notEmpty().withMessage('Access token is required')]);
-
-module.exports = { signInValidationSchema, signUpValidationSchema, signOutValidationSchema, employeeValidationSchema };
+module.exports = { signInValidationSchema, signUpValidationSchema, employeeValidationSchema };

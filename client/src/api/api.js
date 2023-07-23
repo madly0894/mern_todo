@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Block, Notify } from 'notiflix';
-import { QUERY_KEY } from '../helpers/constants';
+import { API_KEYS, NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
 import history from '../helpers/history';
 import queryClient from '../helpers/queryClient';
 import Utils from '../helpers/utils';
@@ -29,7 +29,7 @@ $api.interceptors.response.use(
          if (err.response.status === 401 && !originalRequest._isRetry) {
             originalRequest._isRetry = true;
             try {
-               const response = await axios.get(`${process.env.REACT_APP_API_URL}${QUERY_KEY.auth}/refresh`, {
+               const response = await axios.get(`${process.env.REACT_APP_API_URL}/${API_KEYS.REFRESH}`, {
                   withCredentials: true,
                });
                Utils.setAccessToken(response.data.accessToken);
@@ -37,8 +37,8 @@ $api.interceptors.response.use(
                return axios(originalRequest);
             } catch (e) {
                Utils.removeAccessToken();
-               queryClient.setQueryData([QUERY_KEY.user], null);
-               history.push('/auth/sign-in');
+               queryClient.setQueryData([QUERY_KEYS.USER], null);
+               history.push(NAVIGATOR_KEYS.SIGN_IN);
                Notify.failure(err.response.data?.message);
             }
          } else {
