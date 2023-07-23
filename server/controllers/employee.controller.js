@@ -1,31 +1,23 @@
-const Employee = require('../models/Employee');
+const EmployeeModel = require('../models/Employee.model');
 const EmployeeDto = require('../dtos/employee.dto');
 const { getAge, deleteFile } = require('../helpers/utils');
 
 class EmployeeController {
-   async getEmployees(req, res) {
+   async getEmployees(req, res, next) {
       try {
          const { page = 1, limit = 15 } = req.body;
-
-         const totalItems = await Employee.countDocuments({
-            userId: req.user.id,
-         });
+         const totalItems = await EmployeeModel.countDocuments({ userId: req.user.id });
          const totalPages = Math.ceil(totalItems / limit);
          const skip = (page - 1) * limit;
-
-         const employees = await Employee.find({ userId: req.user.id })
+         const employees = await EmployeeModel.find({ userId: req.user.id })
             .skip(skip)
             .limit(limit)
-            .sort({ _id: 'desc' })
-            .transform(doc =>
-               doc.map(employee => ({
-                  ...new EmployeeDto(employee),
-                  picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
-               })),
-            );
-
-         res.status(200).json({
-            data: employees,
+            .sort({ _id: 'desc' });
+         return res.status(200).json({
+            data: employees.map(employee => ({
+               ...new EmployeeDto(employee),
+               picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
+            })),
             currentPage: page,
             totalPages,
             totalItems,
@@ -33,25 +25,24 @@ class EmployeeController {
             nextPage: page + 1,
          });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
-   async getEmployee(req, res) {
+   async getEmployee(req, res, next) {
       try {
-         const employee = await Employee.findById(req.params.id).transform(doc => new EmployeeDto(doc));
-
-         res.status(200).json(employee);
+         const employee = await EmployeeModel.findById(req.params.id);
+         const employeeDto = new EmployeeDto(employee);
+         return res.status(200).json(employeeDto);
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
-   async createEmployee(req, res) {
+   async createEmployee(req, res, next) {
       try {
          const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
-         await Employee.create({
+         await EmployeeModel.create({
             userId: req.user.id,
             name,
             surname,
@@ -60,24 +51,17 @@ class EmployeeController {
             age: getAge(dateOfBirth),
             picturePath: req.file?.filename ?? null,
          });
-
-         res.status(201).json({ message: 'Employee successfully added' });
+         return res.status(201).json({ message: 'Employee successfully added' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
-   async editEmployee(req, res) {
+   async editEmployee(req, res, next) {
       try {
-         const { name, surname, patronymic = '', dateOfBirth } = req.body;
-
-         const employee = await Employee.findById(req.params.id);
-
-         if (employee.picturePath) {
-            deleteFile(employee.picturePath);
-         }
-
-         await Employee.updateOne(
+         const { picture, name, surname, patronymic = '', dateOfBirth } = req.body;
+         const employee = await EmployeeModel.findById(req.params.id);
+         await EmployeeModel.updateOne(
             { _id: req.params.id },
             {
                name,
@@ -85,33 +69,45 @@ class EmployeeController {
                patronymic,
                dateOfBirth,
                age: getAge(dateOfBirth),
-               picturePath: req.file?.filename ?? null,
+               picturePath: picture || req.file?.filename || null,
             },
          );
-
-         res.status(200).json({ message: 'Employee successfully updated' });
-      } catch (err) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         const photo = employee.picturePath;
+         if (photo) {
+            deleteFile(photo);
+         }
+         return res.status(200).json({ message: 'Employee successfully updated' });
+      } catch (e) {
+         next(e);
       }
    }
 
-   async deleteEmployee(req, res) {
+   async deleteEmployee(req, res, next) {
       try {
-         await Employee.deleteOne({ _id: req.params.id });
-
-         res.status(200).json({ message: 'Employee successfully deleted' });
-      } catch (err) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         const employee = await EmployeeModel.findById(req.params.id);
+         await EmployeeModel.deleteOne({ _id: req.params.id });
+         const picture = employee.picturePath;
+         if (picture) {
+            deleteFile(picture);
+         }
+         return res.status(200).json({ message: 'Employee successfully deleted' });
+      } catch (e) {
+         next(e);
       }
    }
 
-   async deleteEmployees(req, res) {
+   async deleteEmployees(req, res, next) {
       try {
-         await Employee.deleteMany({ _id: { $in: req.query.ids } });
-
-         res.status(200).json({ message: 'Users successfully deleted' });
-      } catch (err) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         const employees = await EmployeeModel.find({ userId: req.user.id });
+         await EmployeeModel.deleteMany({ _id: { $in: req.query.ids } });
+         employees.forEach(employee => {
+            if (employee.picturePath) {
+               deleteFile(employee.picturePath);
+            }
+         });
+         return res.status(200).json({ message: 'Users successfully deleted' });
+      } catch (e) {
+         next(e);
       }
    }
 }

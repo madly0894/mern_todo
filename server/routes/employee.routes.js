@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const employeeController = require('../controllers/employee.controller');
-const { employeeValidationSchema } = require('../helpers/validationUtils');
+const { employeeValidationSchema } = require('../helpers/validationSchemas');
 const uploadMiddleware = require('../middlewares/upload.middleware');
 
 router.get('/', employeeController.getEmployees);

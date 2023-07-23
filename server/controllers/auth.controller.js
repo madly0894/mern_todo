@@ -1,81 +1,84 @@
-const User = require('../models/User');
-const UserDto = require('../dtos/user.dto');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const Token = require('../models/Token');
+const UserModel = require('../models/User.model');
+const UserDto = require('../dtos/user.dto');
+const ApiError = require('../exceptions/api-error');
+const tokenService = require('../services/token.service');
 
 class AuthController {
    async signUp(req, res, next) {
       try {
          const { name, username, password } = req.body;
-
-         const candidate = await User.findOne({ username });
-
+         const candidate = await UserModel.findOne({ username });
          if (candidate) {
-            return res.status(409).json({ message: 'Username already taken' });
+            throw ApiError.BadRequest('Username already taken');
          }
-
          const hashedPassword = await bcrypt.hash(password, 12);
-
-         const user = await User.create({
+         const user = await UserModel.create({
             name,
             username,
             password: hashedPassword,
          });
-
          const userDto = new UserDto(user);
-
-         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
-         });
-
-         await Token.create({ accessToken });
-
-         res.status(201).json({ accessToken, message: 'You have successfully registered' });
+         const userData = tokenService.generateTokens({ ...userDto });
+         await tokenService.saveToken(userDto.id, userData.refreshToken);
+         res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+         return res.status(201).json({ ...userData, message: 'You have successfully registered' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
    async signIn(req, res, next) {
       try {
          const { username, password } = req.body;
-
-         const user = await User.findOne({ username });
-
+         const user = await UserModel.findOne({ username });
          if (!user) {
-            return res.status(400).json({ message: 'User not found' });
+            throw ApiError.BadRequest('User not found');
          }
-
          const isMatch = await bcrypt.compare(password, user.password);
-
          if (!isMatch) {
-            return res.status(400).json({ message: 'Wrong password, please try again' });
+            throw ApiError.BadRequest('Wrong password, please try again');
          }
-
          const userDto = new UserDto(user);
-
-         const accessToken = jwt.sign({ ...userDto }, process.env.JWT_SECRET, {
-            expiresIn: '24h',
-         });
-
-         await Token.create({ accessToken });
-
-         res.status(200).json({ accessToken, message: 'You have successfully logged in' });
+         const userData = tokenService.generateTokens({ ...userDto });
+         await tokenService.saveToken(userDto.id, userData.refreshToken);
+         res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+         return res.status(200).json({ ...userData, message: 'You have successfully logged in' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
       }
    }
 
    async signOut(req, res, next) {
       try {
-         const { accessToken } = req.body;
-
-         await Token.deleteOne({ accessToken });
-
-         res.status(200).json({ message: 'You have successfully logged out' });
+         const { refreshToken } = req.cookies;
+         await tokenService.removeToken(refreshToken);
+         res.clearCookie('refreshToken');
+         return res.status(200).json({ message: 'You have successfully logged out' });
       } catch (e) {
-         res.status(500).json({ message: 'Something went wrong, please try again' });
+         next(e);
+      }
+   }
+
+   async refresh(req, res, next) {
+      try {
+         const { refreshToken } = req.cookies;
+         if (!refreshToken) {
+            throw ApiError.UnauthorizedError('A refresh token is required for refreshing');
+         }
+         const userData = tokenService.validateRefreshToken(refreshToken);
+         const tokenFromDb = await tokenService.findToken(refreshToken);
+         if (!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError('Refresh token is expired');
+         }
+         const user = await UserModel.findById(userData.id);
+         const userDto = new UserDto(user);
+         const tokens = tokenService.generateTokens({ ...userDto });
+         await tokenService.saveToken(userDto.id, tokens.refreshToken);
+         res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+         return res.json(tokens);
+      } catch (e) {
+         next(e);
       }
    }
 }

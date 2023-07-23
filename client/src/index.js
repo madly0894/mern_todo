@@ -8,6 +8,7 @@ import history from './helpers/history';
 import queryClient from './helpers/queryClient';
 
 import App from './App';
+import Authorization from './Authorization';
 import BrowserRouter from './BrowserRouter';
 
 import './styles/index.scss';
@@ -17,7 +18,9 @@ Notify.init({
    width: '300px',
    position: 'right-bottom',
    closeButton: false,
-   timeout: 1500,
+   timeout: 3500,
+   clickToClose: true,
+   cssAnimationStyle: 'from-right',
 });
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
@@ -28,10 +31,11 @@ root.render(
    <BrowserRouter basename='/' history={history}>
       <QueryClientProvider client={queryClient}>
          {/*Provide the client to your App*/}
-         <App />
+         <Authorization>
+            <App />
+         </Authorization>
          {/* The rest of your application */}
          <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      ,
    </BrowserRouter>,
 );
