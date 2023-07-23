@@ -7,8 +7,8 @@ const schema = new Schema(
       surname: { type: String, required: true },
       dateOfBirth: { type: Date, required: true },
       age: { type: Number, min: 18, max: 45, required: true },
+      picturePath: { type: String, default: null },
       patronymic: String,
-      picturePath: String,
    },
    {
       timestamps: true,

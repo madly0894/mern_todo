@@ -15,9 +15,7 @@ export const signIn = async body => {
    return response.data;
 };
 
-export const signOut = async () => {
-   const response = await $api.post(API_KEYS.SIGN_OUT, {
+export const signOut = async () =>
+   await $api.post(API_KEYS.SIGN_OUT, {
       notify: '.App',
    });
-   return response.data;
-};

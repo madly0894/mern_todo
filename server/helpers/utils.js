@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { DIR } = require('./constants');
+const { DIR, FILE_TYPES } = require('./constants');
 
 module.exports = class Utils {
    static getAge(date) {
@@ -9,14 +9,18 @@ module.exports = class Utils {
    static getFileExt(filePath) {
       return path.extname(filePath);
    }
+   static isImage(filePath) {
+      return FILE_TYPES.includes(this.getFileExt(filePath));
+   }
    static deleteFile(path) {
       const dir = `${DIR}/${path}`;
       if (fs.existsSync(dir)) {
-         fs.unlink(dir, err => {
-            if (err) {
-               throw err;
-            }
-         });
+         fs.unlinkSync(dir);
+      }
+   }
+   static createFolder() {
+      if (!fs.existsSync(DIR)) {
+         fs.mkdirSync(DIR);
       }
    }
    static getFileName(name) {

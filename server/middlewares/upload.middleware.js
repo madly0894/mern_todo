@@ -3,18 +3,15 @@ const multer = require('multer');
 const uuid = require('uuid');
 const ApiError = require('../exceptions/api-error');
 const Utils = require('../helpers/utils');
-const { FILE_TYPES, DIR } = require('../helpers/constants');
+const { DIR } = require('../helpers/constants');
 
 //Configuration for Multer
 const multerStorage = multer.diskStorage({
    destination: (req, file, cb) => {
       if (!fs.existsSync(DIR)) {
-         fs.mkdir(DIR, err => {
-            if (err) {
-               throw err;
-            }
-         });
+         fs.mkdirSync(DIR);
       }
+
       cb(null, DIR);
    },
    filename: (req, file, cb) => {
@@ -23,11 +20,11 @@ const multerStorage = multer.diskStorage({
 });
 // Multer Filter
 const multerFilter = (req, file, cb) => {
-   if (FILE_TYPES.includes(Utils.getFileExt(req.body?.picture || file.originalname))) {
-      cb(null, true);
-   } else {
-      cb(ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]), false);
-   }
+   cb(
+      !Utils.isImage(file.originalname) &&
+         ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]),
+      Utils.isImage(file.originalname),
+   );
 };
 
 const upload = multer({
