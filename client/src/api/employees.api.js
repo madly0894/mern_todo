@@ -1,5 +1,6 @@
+import { serialize } from 'object-to-formdata';
 import $api from './api';
-import { API_KEYS } from '../helpers/constants';
+import { API_KEYS, SERIALIZE_OPTIONS } from '../helpers/constants';
 
 export const getEmployees = async params => {
    const response = await $api.get(API_KEYS.EMPLOYEES, {
@@ -16,13 +17,15 @@ export const getEmployee = async id => {
    const response = await $api.get(`${API_KEYS.EMPLOYEES}/${id}`, {
       notify: '.ReactModal__Content',
    });
-
    return response.data;
 };
-export const addEmployee = body =>
-   $api.post(API_KEYS.ADD_EMPLOYEE, body, {
+export const addEmployee = body => {
+   console.log('body', body);
+   return $api.post(API_KEYS.ADD_EMPLOYEE, serialize(body), {
       notify: '.ReactModal__Content',
    });
+};
+
 export const editEmployee = ({ id, body }) =>
    $api.put(API_KEYS.EDIT_EMPLOYEE(id), body, {
       notify: '.ReactModal__Content',

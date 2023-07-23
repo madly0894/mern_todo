@@ -30,3 +30,10 @@ export const NAVIGATOR_KEYS = {
    SIGN_IN: '/auth/sign-in',
    SIGN_UP: '/auth/sign-up',
 };
+
+export const SERIALIZE_OPTIONS = {
+   indices: true,
+   nullsAsUndefineds: false,
+   booleansAsIntegers: false,
+   allowEmptyArrays: false,
+};
