@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
+import { Avatar } from '@chakra-ui/react';
 import Input from '../components/Input';
 import { editEmployee, getEmployee } from '../api/employees.api';
 import { defaultValues, validateSchema } from './AddEmployeeModal';
@@ -14,17 +15,18 @@ import Utils from '../helpers/utils';
 const EditEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
-   const { control, reset, setError, handleSubmit } = useForm({
+   const { control, reset, setError, handleSubmit, setValue, watch } = useForm({
       defaultValues,
       resolver: yupResolver(validateSchema),
    });
 
    const { mutate: mutateGetEmployeeById, isLoading: isLoadingGetEmployeeById } = useMutation({
       mutationFn: getEmployee,
-      onSuccess: data => {
+      onSuccess: ({ picturePath, ...data }) => {
          reset({
             ...data,
             dateOfBirth: dayjs(data.dateOfBirth).format(DATE_FORMAT),
+            picture: picturePath,
          });
       },
    });
@@ -46,31 +48,26 @@ const EditEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const [files, setFiles] = React.useState([]);
-
-   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+   const { getRootProps, getInputProps } = useDropzone({
       accept: 'image/*',
-      onDrop: acceptedFiles => {
-         setFiles(
-            acceptedFiles.map(file =>
-               Object.assign(file, {
-                  preview: URL.createObjectURL(file),
-               }),
-            ),
-         );
-      },
+      onDrop: acceptedFiles => setValue('picture', acceptedFiles[0]),
+      multiple: false,
    });
 
-   const thumbs = files.map(file => (
-      <div className='file-img' key={file.name}>
-         <img
-            src={file.preview}
-            onLoad={() => {
-               URL.revokeObjectURL(file.preview);
-            }}
+   const picture = watch('picture');
+   const photoURL = picture instanceof File ? URL.createObjectURL(picture) : picture;
+
+   const thumbs = (
+      <div className='file-img'>
+         <Avatar
+            size='full'
+            src={photoURL}
+            onLoad={() => picture instanceof File && URL.revokeObjectURL(photoURL)}
+            alt='Photo'
+            loading='lazy'
          />
       </div>
-   ));
+   );
 
    return (
       <Modal

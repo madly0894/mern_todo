@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
+import { Avatar } from '@chakra-ui/react';
 import Input from '../components/Input';
 import { addEmployee } from '../api/employees.api';
 import { QUERY_KEYS, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
@@ -61,8 +62,9 @@ const AddEmployeeModal = ({ show, onHide }) => {
 
    const thumbs = (
       <div className='file-img'>
-         <img
-            src={photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}
+         <Avatar
+            size='full'
+            src={photoURL}
             onLoad={() => photoURL && URL.revokeObjectURL(photoURL)}
             alt='Photo'
             loading='lazy'
