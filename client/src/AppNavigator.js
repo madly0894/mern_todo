@@ -1,10 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import UserOnline from './UserOnline';
 import HomePage from './pages/Home.page';
 import UserOffline from './UserOffline';
-import SignInPage from './pages/Auth/SignIn.page';
-import SignUpPage from './pages/Auth/SignUp.page';
+import SignInPage from './pages/Authentication/SignIn.page';
+import SignUpPage from './pages/Authentication/SignUp.page';
 
 const AppNavigator = () => (
    <Routes>

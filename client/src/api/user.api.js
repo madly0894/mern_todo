@@ -3,7 +3,10 @@ import { QUERY_KEY } from '../helpers/constants';
 
 export const getUser = async () => {
    const response = await $api.get(QUERY_KEY.user, {
-      notify: '.App',
+      notify: {
+         el: '#root',
+         message: 'Please wait...',
+      },
    });
    return response.data;
 };

@@ -3,12 +3,13 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-// const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
    cors({
       credentials: true,
@@ -16,10 +17,10 @@ app.use(
    }),
 );
 app.use(express.static(path.join(__dirname, 'public')));
-// app.use(cookieParser());
 
 // routers
-app.use('/api', require('./router'));
+app.use('/api', require('./routes'));
+app.use(require('./middlewares/error.middleware'));
 
 // if (process.env.NODE_ENV === 'production') {
 //    app.use(express.static(path.join(__dirname, 'client', 'build')));
@@ -29,7 +30,7 @@ app.use('/api', require('./router'));
 //    });
 // }
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, "Couldn't connect to server"));
@@ -46,7 +47,7 @@ async function start() {
          useNewUrlParser: true,
          useUnifiedTopology: true,
       });
-      app.listen(port, () => console.log(`Server started on PORT ${port}`));
+      app.listen(PORT, () => console.log(`Server started on PORT ${PORT}`));
    } catch (e) {
       console.log('Server message', e.message);
       process.exit(1);

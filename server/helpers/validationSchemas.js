@@ -1,5 +1,7 @@
 const { body } = require('express-validator');
 const validate = require('../middlewares/validate.middleware');
+const { getFileExt } = require('./utils');
+const { FILE_TYPES } = require('./constants');
 
 const employeeValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
@@ -31,6 +33,19 @@ const employeeValidationSchema = validate([
       })
       .notEmpty()
       .withMessage('Date of birth field is required'),
+   // body('picture').custom((value, { req }) => {
+   //    const file = req.file;
+   //
+   //    if (!!file) {
+   //       const isImage = FILE_TYPES.includes(getFileExt(file.originalname));
+   //
+   //       if (!isImage) {
+   //          throw new Error('Only .png, .jpg and .jpeg format allowed');
+   //       }
+   //    }
+   //
+   //    return true;
+   // }),
 ]);
 
 const signUpValidationSchema = validate([

@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator');
+const ApiError = require('../exceptions/api-error');
 
 module.exports = validations => async (req, res, next) => {
    for (let validation of validations) {
@@ -12,5 +13,5 @@ module.exports = validations => async (req, res, next) => {
       return next();
    }
 
-   res.status(400).json({ errors: errors.array(), message: 'Incorrect data' });
+   ApiError.BadRequest('Incorrect data', errors.array());
 };
