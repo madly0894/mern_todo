@@ -50,23 +50,22 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+   const { getRootProps, getInputProps } = useDropzone({
       accept: 'image/*',
-      onDrop: acceptedFiles => {
-         setValue('picture', acceptedFiles[0]);
-      },
+      onDrop: acceptedFiles => setValue('picture', acceptedFiles[0]),
       multiple: false,
    });
 
    const picture = watch('picture');
+   const photoURL = picture && URL.createObjectURL(picture);
 
    const thumbs = (
       <div className='file-img'>
          <img
-            src={picture ? URL.createObjectURL(picture) : ''}
-            onLoad={() => {
-               return picture ? URL.revokeObjectURL(picture) : '';
-            }}
+            src={photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}
+            onLoad={() => photoURL && URL.revokeObjectURL(photoURL)}
+            alt='Photo'
+            loading='lazy'
          />
       </div>
    );
