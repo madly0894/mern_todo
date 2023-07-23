@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const multer = require('multer');
 const uuid = require('uuid');
 const ApiError = require('../exceptions/api-error');
@@ -20,7 +18,8 @@ const multerFilter = (req, file, cb) => {
    if (FILE_TYPES.includes(getFileExt(req.body.picture || file.originalname))) {
       cb(null, true);
    } else {
-      cb(ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]), false);
+      cb(null, false);
+      // ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }])
    }
 };
 

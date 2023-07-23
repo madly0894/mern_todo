@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { signOut } from '../api/auth.api';
-import { QUERY_KEY } from '../helpers/constants';
+import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
 import Utils from '../helpers/utils';
 
 export function useSignOut() {
@@ -13,8 +13,8 @@ export function useSignOut() {
       onSuccess: () => {
          // Invalidate and refetch
          Utils.removeAccessToken();
-         queryClient.setQueryData([QUERY_KEY.user], null);
-         navigate('/auth/sign-in');
+         queryClient.setQueryData([QUERY_KEYS.USER], null);
+         navigate(NAVIGATOR_KEYS.SIGN_IN);
       },
    });
 
