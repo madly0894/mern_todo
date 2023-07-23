@@ -22,10 +22,12 @@ const EditEmployeeModal = ({ show, onHide }) => {
 
    const { mutate: mutateGetEmployeeById, isLoading: isLoadingGetEmployeeById } = useMutation({
       mutationFn: getEmployee,
-      onSuccess: ({ picturePath, ...data }) => {
+      onSuccess: ({ picturePath, name, surname, dateOfBirth, patronymic }) => {
          reset({
-            ...data,
-            dateOfBirth: dayjs(data.dateOfBirth).format(DATE_FORMAT),
+            name,
+            surname,
+            patronymic,
+            dateOfBirth: dayjs(dateOfBirth).format(DATE_FORMAT),
             picture: picturePath,
          });
       },

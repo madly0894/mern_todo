@@ -17,7 +17,7 @@ export default function useUser() {
       enabled: !!Utils.getAccessToken(),
       keepPreviousData: true,
       onError: err => {
-         if (err.response.status !== 401) {
+         if (err.response?.status !== 401) {
             signOutMutation();
          }
       },
