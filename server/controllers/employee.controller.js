@@ -14,7 +14,10 @@ class EmployeeController {
             .limit(limit)
             .sort({ _id: 'desc' });
          return res.status(200).json({
-            data: employees.map(employee => new EmployeeDto(employee)),
+            data: employees.map(employee => ({
+               ...new EmployeeDto(employee),
+               picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
+            })),
             currentPage: page,
             totalPages,
             totalItems,
