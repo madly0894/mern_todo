@@ -1,7 +1,7 @@
 import $api from './api';
 import { QUERY_KEY } from '../helpers/constants';
 
-export const getUser = async () => {
+export const getUser = async params => {
    const response = await $api.get(QUERY_KEY.user, {
       notify: {
          el: '#root',
