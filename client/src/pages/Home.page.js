@@ -6,7 +6,7 @@ import { Confirm } from 'notiflix';
 import { deleteEmployee, deleteEmployees, getEmployees } from '../api/employees.api';
 import AddEmployeeModal from '../modals/AddEmployeeModal';
 import EditEmployeeModal from '../modals/EditEmployeeModal';
-import { QUERY_KEY, DATE_CELL_FORMAT } from '../helpers/constants';
+import { QUERY_KEYS, DATE_CELL_FORMAT } from '../helpers/constants';
 import Utils from '../helpers/utils';
 
 const HomePage = () => {
@@ -22,7 +22,7 @@ const HomePage = () => {
       hasNextPage,
       isFetchingNextPage,
    } = useInfiniteQuery({
-      queryKey: [QUERY_KEY.employees],
+      queryKey: [QUERY_KEYS.EMPLOYEES],
       queryFn: getEmployees,
       retry: false,
       refetchOnWindowFocus: false,
@@ -34,7 +34,7 @@ const HomePage = () => {
       mutationFn: deleteEmployee,
       onSuccess: (data, variables, context) => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [QUERY_KEY.employees] });
+         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EMPLOYEES] });
          // Reset selected rows
          setSelectedRowIds([]);
       },
@@ -44,7 +44,7 @@ const HomePage = () => {
       mutationFn: deleteEmployees,
       onSuccess: () => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [QUERY_KEY.employees] });
+         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EMPLOYEES] });
          // Reset selected rows
          setSelectedRowIds([]);
       },

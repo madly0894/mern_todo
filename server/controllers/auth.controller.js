@@ -52,6 +52,9 @@ class AuthController {
    async signOut(req, res, next) {
       try {
          const { refreshToken } = req.cookies;
+         if (!refreshToken) {
+            throw ApiError.UnauthorizedError('A refresh token is required for refreshing');
+         }
          await tokenService.removeToken(refreshToken);
          res.clearCookie('refreshToken');
          return res.status(200).json({ message: 'You have successfully logged out' });
@@ -69,6 +72,7 @@ class AuthController {
          const userData = tokenService.validateRefreshToken(refreshToken);
          const tokenFromDb = await tokenService.findToken(refreshToken);
          if (!userData || !tokenFromDb) {
+            res.clearCookie('refreshToken');
             throw ApiError.UnauthorizedError('Refresh token is expired');
          }
          const user = await UserModel.findById(userData.id);
@@ -78,6 +82,7 @@ class AuthController {
          res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
          return res.json(tokens);
       } catch (e) {
+         res.clearCookie('refreshToken');
          next(e);
       }
    }

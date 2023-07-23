@@ -7,6 +7,8 @@ module.exports = class EmployeeDto {
    dateOfBirth;
    age;
    picturePath;
+   createdAt;
+   updatedAt;
 
    constructor(model) {
       this.id = model._id;
@@ -17,5 +19,7 @@ module.exports = class EmployeeDto {
       this.dateOfBirth = model.dateOfBirth;
       this.age = model.age;
       this.picturePath = model.picturePath;
+      this.createdAt = model.createdAt;
+      this.updatedAt = model.updatedAt;
    }
 };

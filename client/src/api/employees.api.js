@@ -1,8 +1,8 @@
 import $api from './api';
-import { QUERY_KEY } from '../helpers/constants';
+import { API_KEYS } from '../helpers/constants';
 
 export const getEmployees = async params => {
-   const response = await $api.get(QUERY_KEY.employees, {
+   const response = await $api.get(API_KEYS.EMPLOYEES, {
       params: {
          page: params.pageParam || 1,
          limit: 15,
@@ -13,26 +13,26 @@ export const getEmployees = async params => {
    return response.data;
 };
 export const getEmployee = async id => {
-   const response = await $api.get(`${QUERY_KEY.employees}/${id}`, {
+   const response = await $api.get(`${API_KEYS.EMPLOYEES}/${id}`, {
       notify: '.ReactModal__Content',
    });
 
    return response.data;
 };
 export const addEmployee = body =>
-   $api.post(`${QUERY_KEY.employees}/add`, body, {
+   $api.post(API_KEYS.ADD_EMPLOYEE, body, {
       notify: '.ReactModal__Content',
    });
 export const editEmployee = ({ id, body }) =>
-   $api.put(`${QUERY_KEY.employees}/${id}/edit`, body, {
+   $api.put(API_KEYS.EDIT_EMPLOYEE(id), body, {
       notify: '.ReactModal__Content',
    });
 export const deleteEmployee = id =>
-   $api.delete(`${QUERY_KEY.employees}/${id}/delete`, {
+   $api.delete(API_KEYS.DELETE_EMPLOYEE(id), {
       notify: '.App-content',
    });
 export const deleteEmployees = ids =>
-   $api.delete(`${QUERY_KEY.employees}/delete`, {
+   $api.delete(API_KEYS.DELETE_EMPLOYEES, {
       params: {
          ids,
       },

@@ -8,7 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
 import Input from '../components/Input';
 import { addEmployee } from '../api/employees.api';
-import { QUERY_KEY, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
+import { QUERY_KEYS, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
 import Utils from '../helpers/utils';
 
 export const validateSchema = yup.object().shape({
@@ -21,7 +21,6 @@ export const defaultValues = {
    name: '',
    surname: '',
    patronymic: '',
-   secretWord: '',
    dateOfBirth: dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT),
 };
 
@@ -44,7 +43,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
       onSuccess: () => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [QUERY_KEY.employees] });
+         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EMPLOYEES] });
          // Hide modal
          onHide();
       },
@@ -116,15 +115,14 @@ const AddEmployeeModal = ({ show, onHide }) => {
                </div>
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
-               <Input name='secretWord' control={control} placeholder='Secret word' />
                <Input
                   type='date'
                   name='dateOfBirth'
                   control={control}
                   placeholder='Date of birth*'
-                  min={dayjs(Utils.getOwnYear(35)).format(DATE_FORMAT)}
+                  min={dayjs(Utils.getOwnYear(45)).format(DATE_FORMAT)}
                   max={dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT)}
-                  helperText='Birth date must be between 18 and 35 years ago'
+                  helperText='Birth date must be between 18 and 45 years ago'
                />
             </div>
 

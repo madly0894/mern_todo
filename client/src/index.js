@@ -12,6 +12,7 @@ import Authorization from './Authorization';
 import BrowserRouter from './BrowserRouter';
 
 import './styles/index.scss';
+import { NAVIGATOR_KEYS } from './helpers/constants';
 
 // The "init()" function can be used to set custom options as globally.
 Notify.init({
@@ -28,7 +29,7 @@ Modal.setAppElement('#root');
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-   <BrowserRouter basename='/' history={history}>
+   <BrowserRouter basename={NAVIGATOR_KEYS.BASE_URL} history={history}>
       <QueryClientProvider client={queryClient}>
          {/*Provide the client to your App*/}
          <Authorization>

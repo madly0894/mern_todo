@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Header from './layouts/Header';
 import AppNavigator from './AppNavigator';
 
