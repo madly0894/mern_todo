@@ -32,7 +32,10 @@ class EmployeeController {
    async getEmployee(req, res, next) {
       try {
          const employee = await EmployeeModel.findById(req.params.id);
-         const employeeDto = new EmployeeDto(employee);
+         const employeeDto = {
+            ...new EmployeeDto(employee),
+            picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
+         };
          return res.status(200).json(employeeDto);
       } catch (e) {
          next(e);
