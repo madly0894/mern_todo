@@ -21,13 +21,14 @@ export const defaultValues = {
    name: '',
    surname: '',
    patronymic: '',
+   picture: null,
    dateOfBirth: dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT),
 };
 
 const AddEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
-   const { control, reset, setError, handleSubmit, formState } = useForm({
+   const { control, reset, setError, handleSubmit, formState, setValue, watch } = useForm({
       defaultValues,
       resolver: yupResolver(validateSchema),
    });
@@ -49,31 +50,26 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const [files, setFiles] = React.useState([]);
-
    const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
       accept: 'image/*',
       onDrop: acceptedFiles => {
-         setFiles(
-            acceptedFiles.map(file =>
-               Object.assign(file, {
-                  preview: URL.createObjectURL(file),
-               }),
-            ),
-         );
+         setValue('picture', acceptedFiles[0]);
       },
+      multiple: false,
    });
 
-   const thumbs = files.map(file => (
-      <div className='file-img' key={file.name}>
+   const picture = watch('picture');
+
+   const thumbs = (
+      <div className='file-img'>
          <img
-            src={file.preview}
+            src={picture ? URL.createObjectURL(picture) : ''}
             onLoad={() => {
-               URL.revokeObjectURL(file.preview);
+               return picture ? URL.revokeObjectURL(picture) : '';
             }}
          />
       </div>
-   ));
+   );
 
    return (
       <Modal
