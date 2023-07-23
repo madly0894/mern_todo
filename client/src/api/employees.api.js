@@ -11,16 +11,27 @@ export const getEmployees = async params => {
       signal: params.signal,
       notify: '.App-content',
    });
-   return response.data;
+   const data = await response.data;
+   return {
+      ...data,
+      data: data.data.map(obj => ({
+         ...obj,
+         picturePath: (obj.picturePath && `${process.env.REACT_APP_BACKEND_URL}/images/${obj.picturePath}`) ?? null,
+      })),
+   };
 };
 export const getEmployee = async id => {
    const response = await $api.get(`${API_KEYS.EMPLOYEES}/${id}`, {
       notify: '.ReactModal__Content',
    });
-   return response.data;
+   const data = await response.data;
+   return {
+      ...data,
+      picturePath: (data.picturePath && `${process.env.REACT_APP_BACKEND_URL}/images/${data.picturePath}`) ?? null,
+   };
 };
 export const addEmployee = body =>
-   $api.post(API_KEYS.ADD_EMPLOYEE, serialize(body), {
+   $api.post(API_KEYS.ADD_EMPLOYEE, serialize(body, SERIALIZE_OPTIONS), {
       notify: '.ReactModal__Content',
    });
 

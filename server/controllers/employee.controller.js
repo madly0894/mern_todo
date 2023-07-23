@@ -14,10 +14,7 @@ class EmployeeController {
             .limit(limit)
             .sort({ _id: 'desc' });
          return res.status(200).json({
-            data: employees.map(employee => ({
-               ...new EmployeeDto(employee),
-               picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
-            })),
+            data: employees.map(employee => new EmployeeDto(employee)),
             currentPage: page,
             totalPages,
             totalItems,
@@ -32,10 +29,7 @@ class EmployeeController {
    async getEmployee(req, res, next) {
       try {
          const employee = await EmployeeModel.findById(req.params.id);
-         const employeeDto = {
-            ...new EmployeeDto(employee),
-            picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
-         };
+         const employeeDto = new EmployeeDto(employee);
          return res.status(200).json(employeeDto);
       } catch (e) {
          next(e);
