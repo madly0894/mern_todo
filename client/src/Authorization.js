@@ -5,7 +5,7 @@ const Authorization = ({ children }) => {
    const { isFetching } = useUser();
 
    if (isFetching) {
-      return 'Loading...';
+      return null;
    }
 
    return <>{children}</>;

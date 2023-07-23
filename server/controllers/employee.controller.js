@@ -59,12 +59,8 @@ class EmployeeController {
 
    async editEmployee(req, res, next) {
       try {
-         const { name, surname, patronymic = '', dateOfBirth } = req.body;
+         const { picture, name, surname, patronymic = '', dateOfBirth } = req.body;
          const employee = await EmployeeModel.findById(req.params.id);
-         const picture = employee.picturePath;
-         if (picture) {
-            deleteFile(picture);
-         }
          await EmployeeModel.updateOne(
             { _id: req.params.id },
             {
@@ -73,9 +69,13 @@ class EmployeeController {
                patronymic,
                dateOfBirth,
                age: getAge(dateOfBirth),
-               picturePath: req.file?.filename ?? null,
+               picturePath: picture || req.file?.filename || null,
             },
          );
+         const photo = employee.picturePath;
+         if (photo) {
+            deleteFile(photo);
+         }
          return res.status(200).json({ message: 'Employee successfully updated' });
       } catch (e) {
          next(e);
@@ -84,7 +84,12 @@ class EmployeeController {
 
    async deleteEmployee(req, res, next) {
       try {
+         const employee = await EmployeeModel.findById(req.params.id);
          await EmployeeModel.deleteOne({ _id: req.params.id });
+         const picture = employee.picturePath;
+         if (picture) {
+            deleteFile(picture);
+         }
          return res.status(200).json({ message: 'Employee successfully deleted' });
       } catch (e) {
          next(e);
@@ -93,7 +98,13 @@ class EmployeeController {
 
    async deleteEmployees(req, res, next) {
       try {
+         const employees = await EmployeeModel.find({ userId: req.user.id });
          await EmployeeModel.deleteMany({ _id: { $in: req.query.ids } });
+         employees.forEach(employee => {
+            if (employee.picturePath) {
+               deleteFile(employee.picturePath);
+            }
+         });
          return res.status(200).json({ message: 'Users successfully deleted' });
       } catch (e) {
          next(e);

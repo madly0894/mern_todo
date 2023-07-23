@@ -20,6 +20,7 @@ Notify.init({
    closeButton: false,
    timeout: 3500,
    clickToClose: true,
+   cssAnimationStyle: 'from-right',
 });
 
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
@@ -36,6 +37,5 @@ root.render(
          {/* The rest of your application */}
          <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-      ,
    </BrowserRouter>,
 );

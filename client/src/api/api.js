@@ -12,37 +12,19 @@ const $api = axios.create({
 
 $api.interceptors.request.use(config => {
    config.headers.Authorization = `Bearer ${Utils.getAccessToken()}`;
-
-   if (config?.notify) {
-      Block.hourglass(config?.notify, 'Please wait...');
-   }
-
+   config?.notify && Block.hourglass(config.notify.el ?? config.notify, config.notify?.message);
    return config;
 });
 
 $api.interceptors.response.use(
    config => {
-      if (config.data) {
-         const { message } = config.data;
-
-         if (message) {
-            Notify.success(message);
-         }
-      }
-
-      if (config.config?.notify) {
-         Block.remove(config.config.notify);
-      }
-
+      config?.data?.message && Notify.success(config.data.message);
+      config.config?.notify && Block.remove(config.config.notify.el ?? config.config.notify);
       return config;
    },
    async err => {
       const originalRequest = err?.config;
-
-      if (originalRequest.notify) {
-         Block.remove(err.config.notify);
-      }
-
+      originalRequest.notify && Block.remove(originalRequest.notify.el ?? originalRequest.notify);
       if (err?.response) {
          if (err.response.status === 401 && !originalRequest._isRetry) {
             originalRequest._isRetry = true;
@@ -50,22 +32,21 @@ $api.interceptors.response.use(
                const response = await axios.get(`${process.env.REACT_APP_API_URL}${QUERY_KEY.auth}/refresh`, {
                   withCredentials: true,
                });
-               localStorage.setItem('token', response.data.accessToken);
+               Utils.setAccessToken(response.data.accessToken);
                originalRequest.headers.Authorization = `Bearer ${response.data.accessToken}`;
                return axios(originalRequest);
             } catch (e) {
                Utils.removeAccessToken();
                queryClient.setQueryData([QUERY_KEY.user], null);
                history.push('/auth/sign-in');
-               Notify.failure(err.response?.data?.message || `${err.response.status}: ${err.response.statusText}`);
+               Notify.failure(err.response.data?.message);
             }
-
-            throw err;
+         } else {
+            Notify.failure(err.response.data?.message || `${err.response.status}: ${err.response.statusText}`);
          }
+         throw err;
       }
-
       Notify.failure(err.message);
-
       throw err;
    },
 );

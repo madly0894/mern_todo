@@ -5,7 +5,6 @@ import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY } from '../helpers/constants';
-import useUser from '../hooks/useUser';
 
 const pathname = {
    '/': (

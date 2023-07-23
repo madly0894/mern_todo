@@ -11,9 +11,6 @@ export default function useUser() {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      // onError: () => {
-      //    Utils.removeAccessToken();
-      // },
       enabled: !!Utils.getAccessToken(),
       keepPreviousData: true,
    });
