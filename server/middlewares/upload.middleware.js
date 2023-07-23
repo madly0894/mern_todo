@@ -18,8 +18,7 @@ const multerFilter = (req, file, cb) => {
    if (FILE_TYPES.includes(getFileExt(req.body.picture || file.originalname))) {
       cb(null, true);
    } else {
-      cb(null, false);
-      // ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }])
+      cb(ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]), false);
    }
 };
 
