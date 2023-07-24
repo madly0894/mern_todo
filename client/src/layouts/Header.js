@@ -18,6 +18,7 @@ import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
+import UserMenu from './UserMenu.js';
 
 const pathnames = {
    [NAVIGATOR_KEYS.BASE_URL]: (
@@ -49,7 +50,6 @@ const Header = () => {
          deleteUserMutation();
       });
    };
-   console.log('user', user);
 
    return (
       <header>
@@ -71,35 +71,7 @@ const Header = () => {
                <p>
                   {user.name} (@{user.username})
                </p>
-
-               <Menu>
-                  <MenuButton as={Button} colorScheme='black'>
-                     <Avatar size='md' src={user.picturePath} name={user.name} />
-                  </MenuButton>
-                  <MenuList>
-                     <Flex gap='3' p={3} alignItems='center'>
-                        <Avatar src='https://bit.ly/sage-adebayo' size='lg' />
-
-                        <Box>
-                           <Heading size='sm' color='black'>
-                              {user.name}
-                           </Heading>
-                           <Text color='black' fontSize='xs'>
-                              {user.username}
-                           </Text>
-                        </Box>
-                     </Flex>
-                     <MenuDivider />
-                     <Flex flexDirection='column' p={2}>
-                        <Button onClick={deleteUser} colorScheme='red' variant='ghost'>
-                           Delete user
-                        </Button>
-                        <Button onClick={signOut} colorScheme='red' variant='ghost'>
-                           Sign Out
-                        </Button>
-                     </Flex>
-                  </MenuList>
-               </Menu>
+               <UserMenu />
             </div>
          )}
       </header>
