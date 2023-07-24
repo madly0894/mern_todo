@@ -21,8 +21,7 @@ const multerStorage = multer.diskStorage({
 // Multer Filter
 const multerFilter = (req, file, cb) => {
    cb(
-      !Utils.isImage(file.originalname) &&
-         ApiError.BadRequest('Incorrect data', [{ picture: 'Only .png, .jpg and .jpeg format allowed' }]),
+      !Utils.isImage(file.originalname) && ApiError.BadRequest('Only .png, .jpg and .jpeg format allowed'),
       Utils.isImage(file.originalname),
    );
 };

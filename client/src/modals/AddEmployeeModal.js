@@ -31,7 +31,6 @@ const AddEmployeeModal = ({ show, onHide }) => {
    const { control, reset, setError, handleSubmit, formState, setValue, watch } = useForm({
       defaultValues: {
          ...defaultValues,
-         picture: null,
       },
       resolver: yupResolver(validateSchema),
    });
@@ -52,18 +51,6 @@ const AddEmployeeModal = ({ show, onHide }) => {
          onHide();
       },
    });
-
-   const { getRootProps, open, getInputProps } = useDropzone({
-      accept: {
-         'image/*': [],
-      },
-      onDrop: acceptedFiles => setValue('picture', acceptedFiles[0]),
-      multiple: false,
-      noClick: true,
-   });
-
-   const picture = watch('picture');
-   const photoURL = picture && URL.createObjectURL(picture);
 
    return (
       <Modal
@@ -86,30 +73,7 @@ const AddEmployeeModal = ({ show, onHide }) => {
             </div>
 
             <div className='modal-content'>
-               <div className='top-line'>
-                  <div className='avatar-field' {...getRootProps()}>
-                     <input {...getInputProps()} />
-                     <div className='avatar'>
-                        <div className='file-img'>
-                           <Avatar
-                              size='full'
-                              src={photoURL}
-                              onLoad={() => URL.revokeObjectURL(photoURL)}
-                              alt='Photo'
-                              loading='lazy'
-                           />
-                        </div>
-                        <span className='edit-av add' onClick={open}>
-                           <i className='material-icons'>edit</i>
-                        </span>
-                     </div>
-                  </div>
-
-                  <div className='main-block'>
-                     <h3>Main information</h3>
-                     <Input autoFocus name='name' control={control} placeholder='Name*' />
-                  </div>
-               </div>
+               <Input autoFocus name='name' control={control} placeholder='Name*' />
                <Input name='surname' control={control} placeholder='Surname*' />
                <Input name='patronymic' control={control} placeholder='Patronymic' />
                <Input

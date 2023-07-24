@@ -50,7 +50,6 @@ class EmployeeController {
             patronymic,
             dateOfBirth,
             age: Utils.getAge(dateOfBirth),
-            picturePath: req.file?.filename ?? null,
          });
          return res.status(201).json({ message: 'Employee successfully added' });
       } catch (e) {
