@@ -20,7 +20,7 @@ export const getEmployee = async id => {
    return response.data;
 };
 export const addEmployee = async body =>
-   $api.post(API_KEYS.ADD_EMPLOYEE, serialize(body, SERIALIZE_OPTIONS), {
+   $api.post(API_KEYS.ADD_EMPLOYEE, body, {
       notify: '.ReactModal__Content',
    });
 
