@@ -6,7 +6,7 @@ const { userValidationSchema } = require('../helpers/validationSchemas');
 
 router.get('/', userController.getUser);
 router.put('/update', userValidationSchema, userController.updateUser);
-router.put('/picture', userController.uploadUserPicture);
+router.patch('/picture', userController.uploadUserPicture);
 router.delete('/delete', userController.deleteUser);
 
 module.exports = router;
