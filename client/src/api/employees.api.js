@@ -44,4 +44,4 @@ export const getEmployeePicture = async id => {
    return response.data;
 };
 export const uploadEmployeePicture = async ({ id, picture }) =>
-   $api.put(API_KEYS.EMPLOYEE_PICTURE(id), serialize({ picture }, SERIALIZE_OPTIONS));
+   $api.patch(API_KEYS.EMPLOYEE_PICTURE(id), serialize({ picture }, SERIALIZE_OPTIONS));

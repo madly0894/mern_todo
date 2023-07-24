@@ -11,6 +11,6 @@ router.put('/:id/edit', employeeValidationSchema, employeeController.editEmploye
 router.delete('/:id/delete', employeeController.deleteEmployee);
 router.delete('/delete', employeeController.deleteEmployees);
 router.get('/:id/picture', employeeController.getEmployeePicture);
-router.put('/:id/picture', uploadMiddleware.single('picture'), employeeController.uploadEmployeePicture);
+router.patch('/:id/picture', uploadMiddleware.single('picture'), employeeController.uploadEmployeePicture);
 
 module.exports = router;
