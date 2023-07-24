@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropzone } from 'react-dropzone';
 import Modal from 'react-modal';
+import { Avatar } from '@chakra-ui/react';
 import Input from '../components/Input';
 import { addEmployee } from '../api/employees.api';
 import { QUERY_KEYS, DATE_FORMAT, MODAL_CONTENT_STYLE } from '../helpers/constants';
@@ -27,8 +28,11 @@ export const defaultValues = {
 const AddEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
-   const { control, reset, setError, handleSubmit, formState } = useForm({
-      defaultValues,
+   const { control, reset, setError, handleSubmit, formState, setValue, watch } = useForm({
+      defaultValues: {
+         ...defaultValues,
+         picture: null,
+      },
       resolver: yupResolver(validateSchema),
    });
 
@@ -49,31 +53,17 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const [files, setFiles] = React.useState([]);
-
-   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-      accept: 'image/*',
-      onDrop: acceptedFiles => {
-         setFiles(
-            acceptedFiles.map(file =>
-               Object.assign(file, {
-                  preview: URL.createObjectURL(file),
-               }),
-            ),
-         );
+   const { getRootProps, open, getInputProps } = useDropzone({
+      accept: {
+         'image/*': [],
       },
+      onDrop: acceptedFiles => setValue('picture', acceptedFiles[0]),
+      multiple: false,
+      noClick: true,
    });
 
-   const thumbs = files.map(file => (
-      <div className='file-img' key={file.name}>
-         <img
-            src={file.preview}
-            onLoad={() => {
-               URL.revokeObjectURL(file.preview);
-            }}
-         />
-      </div>
-   ));
+   const picture = watch('picture');
+   const photoURL = picture && URL.createObjectURL(picture);
 
    return (
       <Modal
@@ -99,10 +89,17 @@ const AddEmployeeModal = ({ show, onHide }) => {
                <div className='top-line'>
                   <div className='avatar-field' {...getRootProps()}>
                      <input {...getInputProps()} />
-
                      <div className='avatar'>
-                        {thumbs}
-                        <span className='edit-av'>
+                        <div className='file-img'>
+                           <Avatar
+                              size='full'
+                              src={photoURL}
+                              onLoad={() => URL.revokeObjectURL(photoURL)}
+                              alt='Photo'
+                              loading='lazy'
+                           />
+                        </div>
+                        <span className='edit-av add' onClick={open}>
                            <i className='material-icons'>edit</i>
                         </span>
                      </div>

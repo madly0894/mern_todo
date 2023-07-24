@@ -1,5 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ChakraProvider, extendBaseTheme } from '@chakra-ui/react';
+import chakraTheme from '@chakra-ui/theme';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Notify } from 'notiflix';
@@ -14,6 +16,8 @@ import BrowserRouter from './BrowserRouter';
 import './styles/index.scss';
 import { NAVIGATOR_KEYS } from './helpers/constants';
 
+const { Avatar } = chakraTheme.components;
+
 // The "init()" function can be used to set custom options as globally.
 Notify.init({
    width: '300px',
@@ -27,14 +31,23 @@ Notify.init({
 // Make sure to bind modal to your appElement (https://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#root');
 
+// Theme
+const theme = extendBaseTheme({
+   components: {
+      Avatar,
+   },
+});
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
    <BrowserRouter basename={NAVIGATOR_KEYS.BASE_URL} history={history}>
       <QueryClientProvider client={queryClient}>
          {/*Provide the client to your App*/}
-         <Authorization>
-            <App />
-         </Authorization>
+         <ChakraProvider theme={theme}>
+            <Authorization>
+               <App />
+            </Authorization>
+         </ChakraProvider>
          {/* The rest of your application */}
          <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

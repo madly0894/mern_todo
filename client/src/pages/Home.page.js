@@ -3,6 +3,7 @@ import * as dayjs from 'dayjs';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-cool-inview';
 import { Confirm } from 'notiflix';
+import { Avatar } from '@chakra-ui/react';
 import { deleteEmployee, deleteEmployees, getEmployees } from '../api/employees.api';
 import AddEmployeeModal from '../modals/AddEmployeeModal';
 import EditEmployeeModal from '../modals/EditEmployeeModal';
@@ -111,6 +112,7 @@ const HomePage = () => {
                               onChange={e => onToggleAllRows(e.target.checked)}
                            />
                         </th>
+                        <th>Avatar</th>
                         <th>Name</th>
                         <th>Surname</th>
                         <th>Patronymic</th>
@@ -161,6 +163,9 @@ const HomePage = () => {
                                        onToggleRow({ isChecked: e.target.checked, employeeId: employee.id })
                                     }
                                  />
+                              </td>
+                              <td className={checkItemClass}>
+                                 <Avatar size='md' src={employee.picturePath} alt='avatar' />
                               </td>
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>

@@ -115,7 +115,7 @@ button.delete-action {
    opacity: 0;
    transition: all 300ms ease-in-out;
    background-color: rgba(0, 0, 0, 0.5) !important;
-   z-index: 99;
+   z-index: 1001;
 }
 
 .ReactModal__Overlay--after-open {
@@ -226,6 +226,7 @@ button.delete-action {
                display: flex;
                justify-content: center;
                align-items: center;
+               cursor: pointer;
                width: 24px;
                height: 24px;
                position: absolute;
@@ -233,9 +234,22 @@ button.delete-action {
                right: 0;
                z-index: 9;
                border-radius: 100%;
-               background-color: #463c61;
+               &[aria-disabled="true"] {
+                  pointer-events: none;
+               }
+               .chakra-spinner {
+                  width: 16px;
+                  height: 16px;
+                  color: $white-color;
+               }
                .material-icons {
-                  color: #ffffff;
+                  color: $white-color;
+               }
+               &.add {
+                  background-color: $success-color;
+               }
+               &.edit {
+                  background-color: $info-color;
                }
             }
          }
