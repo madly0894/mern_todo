@@ -1,5 +1,6 @@
 import $api from './api';
-import { API_KEYS } from '../helpers/constants';
+import { API_KEYS, SERIALIZE_OPTIONS } from '../helpers/constants';
+import { serialize } from 'object-to-formdata';
 
 export const getUser = async params => {
    const response = await $api.get(API_KEYS.USER, {
@@ -10,10 +11,9 @@ export const getUser = async params => {
    });
    return response.data;
 };
-
-export const deleteUser = async () => {
-   const response = await $api.delete(API_KEYS.USER, {
+export const updateUser = async body => $api.put(API_KEYS.UPDATE_USER, body);
+export const uploadUserPicture = async body => $api.put(API_KEYS.USER_PICTURE, serialize(body, SERIALIZE_OPTIONS));
+export const deleteUser = async () =>
+   $api.delete(API_KEYS.DELETE_USER, {
       notify: '.App',
    });
-   return response.data;
-};

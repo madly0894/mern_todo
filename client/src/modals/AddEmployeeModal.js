@@ -22,7 +22,6 @@ export const defaultValues = {
    name: '',
    surname: '',
    patronymic: '',
-   picture: null,
    dateOfBirth: dayjs(Utils.getOwnYear(18)).format(DATE_FORMAT),
 };
 
@@ -30,7 +29,10 @@ const AddEmployeeModal = ({ show, onHide }) => {
    const queryClient = useQueryClient();
 
    const { control, reset, setError, handleSubmit, formState, setValue, watch } = useForm({
-      defaultValues,
+      defaultValues: {
+         ...defaultValues,
+         picture: null,
+      },
       resolver: yupResolver(validateSchema),
    });
 
@@ -51,26 +53,17 @@ const AddEmployeeModal = ({ show, onHide }) => {
       },
    });
 
-   const { getRootProps, getInputProps } = useDropzone({
-      accept: 'image/*',
+   const { getRootProps, open, getInputProps } = useDropzone({
+      accept: {
+         'image/*': [],
+      },
       onDrop: acceptedFiles => setValue('picture', acceptedFiles[0]),
       multiple: false,
+      noClick: true,
    });
 
    const picture = watch('picture');
    const photoURL = picture && URL.createObjectURL(picture);
-
-   const thumbs = (
-      <div className='file-img'>
-         <Avatar
-            size='full'
-            src={photoURL}
-            onLoad={() => photoURL && URL.revokeObjectURL(photoURL)}
-            alt='Photo'
-            loading='lazy'
-         />
-      </div>
-   );
 
    return (
       <Modal
@@ -96,10 +89,17 @@ const AddEmployeeModal = ({ show, onHide }) => {
                <div className='top-line'>
                   <div className='avatar-field' {...getRootProps()}>
                      <input {...getInputProps()} />
-
                      <div className='avatar'>
-                        {thumbs}
-                        <span className='edit-av'>
+                        <div className='file-img'>
+                           <Avatar
+                              size='full'
+                              src={photoURL}
+                              onLoad={() => URL.revokeObjectURL(photoURL)}
+                              alt='Photo'
+                              loading='lazy'
+                           />
+                        </div>
+                        <span className='edit-av add' onClick={open}>
                            <i className='material-icons'>edit</i>
                         </span>
                      </div>

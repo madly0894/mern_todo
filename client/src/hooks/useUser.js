@@ -10,14 +10,10 @@ export default function useUser() {
    return useQuery({
       queryKey: [QUERY_KEYS.USER],
       queryFn: getUser,
-      retry: false,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
       enabled: !!Utils.getAccessToken(),
       keepPreviousData: true,
       onError: err => {
-         if (err.response.status !== 401) {
+         if (err.response?.status !== 401) {
             signOutMutation();
          }
       },

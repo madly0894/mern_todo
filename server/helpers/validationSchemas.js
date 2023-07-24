@@ -1,6 +1,8 @@
 const { body } = require('express-validator');
 const validate = require('../middlewares/validate.middleware');
 
+const userValidationSchema = validate([body('name').notEmpty().withMessage('Name field is required')]);
+
 const employeeValidationSchema = validate([
    body('name').notEmpty().withMessage('Name field is required'),
    body('surname').notEmpty().withMessage('Surname field is required'),
@@ -59,4 +61,4 @@ const signInValidationSchema = validate([
       .withMessage('Password must contain at least 6 characters'),
 ]);
 
-module.exports = { signInValidationSchema, signUpValidationSchema, employeeValidationSchema };
+module.exports = { userValidationSchema, signInValidationSchema, signUpValidationSchema, employeeValidationSchema };

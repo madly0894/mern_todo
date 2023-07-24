@@ -1920,7 +1920,7 @@
     "@chakra-ui/theme" "3.2.0"
     lodash.mergewith "4.6.2"
 
-"@chakra-ui/theme@3.2.0":
+"@chakra-ui/theme@3.2.0", "@chakra-ui/theme@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@chakra-ui/theme/-/theme-3.2.0.tgz#b8232d770e542895cf82535942a74ad803bb7133"
   integrity sha512-q9mppdkhmaBnvOT8REr/lVNNBX/prwm50EzObJ+r+ErVhNQDc55gCFmtr+It3xlcCqmOteG6XUdwRCJz8qzOqg==

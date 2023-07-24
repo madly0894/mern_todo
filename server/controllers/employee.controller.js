@@ -1,6 +1,6 @@
 const EmployeeModel = require('../models/Employee.model');
 const EmployeeDto = require('../dtos/employee.dto');
-const { getAge, deleteFile } = require('../helpers/utils');
+const Utils = require('../helpers/utils');
 
 class EmployeeController {
    async getEmployees(req, res, next) {
@@ -13,11 +13,12 @@ class EmployeeController {
             .skip(skip)
             .limit(limit)
             .sort({ _id: 'desc' });
+         const employeesData = employees.map(employee => ({
+            ...new EmployeeDto(employee),
+            picturePath: Utils.setImageUrl(employee.picturePath),
+         }));
          return res.status(200).json({
-            data: employees.map(employee => ({
-               ...new EmployeeDto(employee),
-               picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
-            })),
+            data: employeesData,
             currentPage: page,
             totalPages,
             totalItems,
@@ -32,11 +33,8 @@ class EmployeeController {
    async getEmployee(req, res, next) {
       try {
          const employee = await EmployeeModel.findById(req.params.id);
-         const employeeDto = {
-            ...new EmployeeDto(employee),
-            picturePath: employee.picturePath ? `${process.env.API_URL}/images/${employee.picturePath}` : null,
-         };
-         return res.status(200).json(employeeDto);
+         const employeeData = new EmployeeDto(employee);
+         return res.status(200).json(employeeData);
       } catch (e) {
          next(e);
       }
@@ -51,7 +49,7 @@ class EmployeeController {
             surname,
             patronymic,
             dateOfBirth,
-            age: getAge(dateOfBirth),
+            age: Utils.getAge(dateOfBirth),
             picturePath: req.file?.filename ?? null,
          });
          return res.status(201).json({ message: 'Employee successfully added' });
@@ -62,8 +60,7 @@ class EmployeeController {
 
    async editEmployee(req, res, next) {
       try {
-         const { picture, name, surname, patronymic = '', dateOfBirth } = req.body;
-         const employee = await EmployeeModel.findById(req.params.id);
+         const { name, surname, patronymic = '', dateOfBirth } = req.body;
          await EmployeeModel.updateOne(
             { _id: req.params.id },
             {
@@ -71,15 +68,41 @@ class EmployeeController {
                surname,
                patronymic,
                dateOfBirth,
-               age: getAge(dateOfBirth),
-               picturePath: picture || req.file?.filename || null,
+               age: Utils.getAge(dateOfBirth),
             },
          );
-         const photo = employee.picturePath;
-         if (photo) {
-            deleteFile(photo);
-         }
          return res.status(200).json({ message: 'Employee successfully updated' });
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   async getEmployeePicture(req, res, next) {
+      try {
+         const employee = await EmployeeModel.findById(req.params.id);
+         const employeeData = {
+            picturePath: Utils.setImageUrl(employee.picturePath),
+         };
+         return res.status(200).json(employeeData);
+      } catch (e) {
+         next(e);
+      }
+   }
+
+   async uploadEmployeePicture(req, res, next) {
+      try {
+         const employee = await EmployeeModel.findById(req.params.id);
+         await EmployeeModel.updateOne(
+            { _id: req.params.id },
+            {
+               picturePath: req.file.filename,
+            },
+         );
+         const picturePath = employee?.picturePath;
+         if (!!picturePath) {
+            Utils.deleteFile(picturePath);
+         }
+         return res.status(200).json({ message: 'Employee picture successfully updated' });
       } catch (e) {
          next(e);
       }
@@ -89,9 +112,9 @@ class EmployeeController {
       try {
          const employee = await EmployeeModel.findById(req.params.id);
          await EmployeeModel.deleteOne({ _id: req.params.id });
-         const picture = employee.picturePath;
-         if (picture) {
-            deleteFile(picture);
+         const picturePath = employee?.picturePath;
+         if (!!picturePath) {
+            Utils.deleteFile(picturePath);
          }
          return res.status(200).json({ message: 'Employee successfully deleted' });
       } catch (e) {
@@ -104,8 +127,9 @@ class EmployeeController {
          const employees = await EmployeeModel.find({ userId: req.user.id });
          await EmployeeModel.deleteMany({ _id: { $in: req.query.ids } });
          employees.forEach(employee => {
-            if (employee.picturePath) {
-               deleteFile(employee.picturePath);
+            const picturePath = employee?.picturePath;
+            if (!!picturePath) {
+               Utils.deleteFile(picturePath);
             }
          });
          return res.status(200).json({ message: 'Users successfully deleted' });
