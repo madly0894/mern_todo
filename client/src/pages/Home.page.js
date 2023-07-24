@@ -165,7 +165,7 @@ const HomePage = () => {
                                  />
                               </td>
                               <td className={checkItemClass}>
-                                 <Avatar size='md' src={employee.picturePath} alt='avatar' />
+                                 <Avatar size='md' src={employee.picturePath} />
                               </td>
                               <td className={checkItemClass}>{employee.name}</td>
                               <td className={checkItemClass}>{employee.surname}</td>

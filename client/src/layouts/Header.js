@@ -1,6 +1,19 @@
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Confirm } from 'notiflix';
+import {
+   Menu,
+   MenuButton,
+   MenuList,
+   MenuGroup,
+   MenuDivider,
+   Button,
+   Avatar,
+   Heading,
+   Box,
+   Text,
+   Flex,
+} from '@chakra-ui/react';
 import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { useQueryClient } from '@tanstack/react-query';
@@ -36,10 +49,13 @@ const Header = () => {
          deleteUserMutation();
       });
    };
+   console.log('user', user);
 
    return (
       <header>
-         <h1 className='title'>{pathnames[location.pathname]}</h1>
+         <Heading as='h1' className='title'>
+            {pathnames[location.pathname]}
+         </Heading>
 
          {!user ? (
             <ul className='right-block'>
@@ -56,12 +72,34 @@ const Header = () => {
                   {user.name} (@{user.username})
                </p>
 
-               <button className='action delete-action' onClick={deleteUser}>
-                  Delete user
-               </button>
-               <button className='action delete-action' onClick={signOut}>
-                  Sign Out
-               </button>
+               <Menu>
+                  <MenuButton as={Button} colorScheme='black'>
+                     <Avatar size='md' src={user.picturePath} name={user.name} />
+                  </MenuButton>
+                  <MenuList>
+                     <Flex gap='3' p={3} alignItems='center'>
+                        <Avatar src='https://bit.ly/sage-adebayo' size='lg' />
+
+                        <Box>
+                           <Heading size='sm' color='black'>
+                              {user.name}
+                           </Heading>
+                           <Text color='black' fontSize='xs'>
+                              {user.username}
+                           </Text>
+                        </Box>
+                     </Flex>
+                     <MenuDivider />
+                     <Flex flexDirection='column' p={2}>
+                        <Button onClick={deleteUser} colorScheme='red' variant='ghost'>
+                           Delete user
+                        </Button>
+                        <Button onClick={signOut} colorScheme='red' variant='ghost'>
+                           Sign Out
+                        </Button>
+                     </Flex>
+                  </MenuList>
+               </Menu>
             </div>
          )}
       </header>
