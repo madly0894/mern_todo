@@ -21,6 +21,7 @@ import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
 import { getEmployeePicture, uploadEmployeePicture } from '../api/employees.api';
+import { uploadUserPicture } from '../api/user.api';
 
 const UserMenu = () => {
    const queryClient = useQueryClient();
@@ -44,36 +45,31 @@ const UserMenu = () => {
    console.log('user', user);
 
    const {
-      mutate: mutateUploadPicture,
+      mutate: mutateUploadUserPicture,
       isLoading: isLoadingUploadPicture,
       isSuccess: isSuccessUploadPicture,
    } = useMutation({
-      mutationFn: uploadEmployeePicture,
+      mutationFn: uploadUserPicture,
       onSuccess: (data, variables) => {
          // Invalidate and refetch
-         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PICTURE] });
+         queryClient.setQueryData([QUERY_KEYS.USER], { picturePath: URL.createObjectURL(variables) });
       },
-   });
-
-   const { data, isFetching: isFetchingGetPicture } = useQuery({
-      queryKey: [QUERY_KEYS.PICTURE],
-      //   queryFn: () => getEmployeePicture(show),
-      onSuccess: (data, variables, context) => {
-         // Invalidate and refetch
-         isSuccessUploadPicture && queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.EMPLOYEES] });
+      onSettled: (data, variables) => {
+         URL.revokeObjectURL(variables);
       },
-      //   enabled: !!show,
    });
 
    const { getRootProps, getInputProps, open } = useDropzone({
       accept: {
          'image/*': [],
       },
-      //   onDrop: acceptedFiles => acceptedFiles.length > 0 && mutateUploadPicture({ id: show, picture: acceptedFiles[0] }),
-      disabled: isFetchingGetPicture || isLoadingUploadPicture,
+      onDrop: acceptedFiles => acceptedFiles.length > 0 && mutateUploadUserPicture(acceptedFiles[0]),
+      disabled: isLoadingUploadPicture,
       multiple: false,
       noClick: true,
    });
+
+   console.log('data');
 
    return (
       <Menu>
@@ -82,15 +78,13 @@ const UserMenu = () => {
          </MenuButton>
          <MenuList>
             <Flex gap='3' p={3} alignItems='center' {...getRootProps()}>
-               <input {...getInputProps()} />
-               {/* <Avatar size='full' src={data?.picturePath} alt='Photo' loading='lazy' /> */}
-               <span className='edit-av edit' onClick={open}>
-                  {isFetchingGetPicture || isLoadingUploadPicture ? (
-                     <Spinner />
-                  ) : (
-                     <i className='material-icons'>edit</i>
-                  )}
-               </span>
+               <div className='user-avatar'>
+                  <input {...getInputProps()} />
+                  <Avatar size='full' src={user.picturePath} alt='Photo' loading='lazy' />
+                  <span className='edit-av edit' onClick={open}>
+                     {isLoadingUploadPicture ? <Spinner /> : <i className='material-icons'>edit</i>}
+                  </span>
+               </div>
 
                <Box>
                   <Heading size='sm' color='black'>
