@@ -1,10 +1,24 @@
 import * as React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Confirm } from 'notiflix';
+import {
+   Menu,
+   MenuButton,
+   MenuList,
+   MenuGroup,
+   MenuDivider,
+   Button,
+   Avatar,
+   Heading,
+   Box,
+   Text,
+   Flex,
+} from '@chakra-ui/react';
 import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
 import { useQueryClient } from '@tanstack/react-query';
 import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
+import UserMenu from './UserMenu.js';
 
 const pathnames = {
    [NAVIGATOR_KEYS.BASE_URL]: (
@@ -39,7 +53,9 @@ const Header = () => {
 
    return (
       <header>
-         <h1 className='title'>{pathnames[location.pathname]}</h1>
+         <Heading as='h1' className='title'>
+            {pathnames[location.pathname]}
+         </Heading>
 
          {!user ? (
             <ul className='right-block'>
@@ -55,13 +71,7 @@ const Header = () => {
                <p>
                   {user.name} (@{user.username})
                </p>
-
-               <button className='action delete-action' onClick={deleteUser}>
-                  Delete user
-               </button>
-               <button className='action delete-action' onClick={signOut}>
-                  Sign Out
-               </button>
+               <UserMenu />
             </div>
          )}
       </header>

@@ -20,7 +20,7 @@ export const getEmployee = async id => {
    return response.data;
 };
 export const addEmployee = async body =>
-   $api.post(API_KEYS.ADD_EMPLOYEE, serialize(body, SERIALIZE_OPTIONS), {
+   $api.post(API_KEYS.ADD_EMPLOYEE, body, {
       notify: '.ReactModal__Content',
    });
 
@@ -44,4 +44,4 @@ export const getEmployeePicture = async id => {
    return response.data;
 };
 export const uploadEmployeePicture = async ({ id, picture }) =>
-   $api.put(API_KEYS.EMPLOYEE_PICTURE(id), serialize({ picture }, SERIALIZE_OPTIONS));
+   $api.patch(API_KEYS.EMPLOYEE_PICTURE(id), serialize({ picture }, SERIALIZE_OPTIONS));

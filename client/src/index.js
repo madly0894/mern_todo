@@ -16,7 +16,7 @@ import BrowserRouter from './BrowserRouter';
 import './styles/index.scss';
 import { NAVIGATOR_KEYS } from './helpers/constants';
 
-const { Avatar } = chakraTheme.components;
+const { Avatar, Menu, Button, Heading, Box, Text, Flex } = chakraTheme.components;
 
 // The "init()" function can be used to set custom options as globally.
 Notify.init({
@@ -35,6 +35,12 @@ Modal.setAppElement('#root');
 const theme = extendBaseTheme({
    components: {
       Avatar,
+      Menu,
+      Button,
+      Heading,
+      Box,
+      Text,
+      Flex,
    },
 });
 

@@ -21,6 +21,18 @@ class Utils {
    static removeAccessToken() {
       return localStorage.removeItem('accessToken');
    }
+   static traverse(obj) {
+      let values = [];
+      // eslint-disable-next-line no-restricted-syntax
+      for (const key in obj) {
+         if (typeof obj[key] === 'object' && obj[key] !== null) {
+            values = values.concat(this.traverse(obj[key]));
+         } else {
+            values.push(obj[key]);
+         }
+      }
+      return values;
+   }
 }
 
 export default Utils;

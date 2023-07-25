@@ -36,7 +36,7 @@ class UserController {
          await UserModel.updateOne(
             { _id: req.user.id },
             {
-               picturePath: req.file.filename,
+               picturePath: req.file?.filename ?? null,
             },
          );
          const picturePath = user?.picturePath;
