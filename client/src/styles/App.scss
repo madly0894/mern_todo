@@ -45,29 +45,37 @@
             }
          }
          .user-avatar {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             border: 1px solid #aeaeae;
-            position: relative;
-            .edit-av {
-               display: flex;
-               justify-content: center;
-               align-items: center;
-               cursor: pointer;
-               width: 24px;
-               height: 24px;
-               position: absolute;
-               bottom: 0;
-               right: 0;
-               z-index: 9;
-               border-radius: 100%;
-               background-color: #26c0d3;
-               .material-icons {
-                  color: $white-color;
+            .file-img {
+               position: relative;
+               .edit-av {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  cursor: pointer;
+                  width: 24px;
+                  height: 24px;
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                  z-index: 9;
+                  border-radius: 100%;
+                  background-color: #26c0d3;
+                  .material-icons {
+                     color: $white-color;
+                  }
                }
+            }
+         }
+         .menu-list {
+            gap: 8px;
+            button {
+               justify-content: flex-start;
             }
          }
       }
@@ -75,7 +83,6 @@
 
    main {
       width: 100%;
-
       .App-content {
          position: relative;
          width: 100%;

@@ -68,9 +68,6 @@ const Header = () => {
             </ul>
          ) : (
             <div className='right-block'>
-               <p>
-                  {user.name} (@{user.username})
-               </p>
                <UserMenu />
             </div>
          )}

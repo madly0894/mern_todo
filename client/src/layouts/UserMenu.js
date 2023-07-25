@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 import { Confirm } from 'notiflix';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDropzone } from 'react-dropzone';
 import {
    Menu,
    MenuButton,
    MenuList,
-   MenuGroup,
    MenuDivider,
    Button,
    Avatar,
@@ -19,40 +17,24 @@ import {
 } from '@chakra-ui/react';
 import { useSignOut } from '../hooks/useSignOut';
 import { useDeleteUser } from '../hooks/useDeleteUser';
-import { NAVIGATOR_KEYS, QUERY_KEYS } from '../helpers/constants';
-import { getEmployeePicture, uploadEmployeePicture } from '../api/employees.api';
+import { QUERY_KEYS } from '../helpers/constants';
 import { uploadUserPicture } from '../api/user.api';
 
 const UserMenu = () => {
    const queryClient = useQueryClient();
-   const location = useLocation();
    const user = queryClient.getQueryData([QUERY_KEYS.USER]);
 
    const signOutMutation = useSignOut();
    const deleteUserMutation = useDeleteUser();
 
-   const signOut = () => {
-      Confirm.show('Sign out', 'Are you sure you want to sign out?', 'Yes', 'No', () => {
-         signOutMutation();
-      });
-   };
-
-   const deleteUser = () => {
-      Confirm.show('Delete user', `Are you sure to delete ${user.username}?`, 'Yes', 'No', () => {
-         deleteUserMutation();
-      });
-   };
-   console.log('user', user);
-
-   const {
-      mutate: mutateUploadUserPicture,
-      isLoading: isLoadingUploadPicture,
-      isSuccess: isSuccessUploadPicture,
-   } = useMutation({
+   const { mutate: mutateUploadUserPicture, isLoading: isLoadingUploadPicture } = useMutation({
       mutationFn: uploadUserPicture,
       onSuccess: (data, variables) => {
          // Invalidate and refetch
-         queryClient.setQueryData([QUERY_KEYS.USER], { picturePath: URL.createObjectURL(variables) });
+         queryClient.setQueryData([QUERY_KEYS.USER], input => ({
+            ...input,
+            picturePath: URL.createObjectURL(variables),
+         }));
       },
       onSettled: (data, variables) => {
          URL.revokeObjectURL(variables);
@@ -69,21 +51,33 @@ const UserMenu = () => {
       noClick: true,
    });
 
-   console.log('data');
+   const signOut = () => {
+      Confirm.show('Sign out', 'Are you sure you want to sign out?', 'Yes', 'No', () => {
+         signOutMutation();
+      });
+   };
+
+   const deleteUser = () => {
+      Confirm.show('Delete user', `Are you sure to delete ${user.username}?`, 'Yes', 'No', () => {
+         deleteUserMutation();
+      });
+   };
 
    return (
-      <Menu>
-         <MenuButton as={Button} colorScheme='black'>
-            <Avatar size='md' src={user.picturePath} name={user.name} />
+      <Menu placement='bottom-end'>
+         <MenuButton as={Button} p={0} colorScheme='black'>
+            <Avatar size='md' src={user.picturePath} name={user.name} loading='lazy' />
          </MenuButton>
          <MenuList>
-            <Flex gap='3' p={3} alignItems='center' {...getRootProps()}>
-               <div className='user-avatar'>
+            <Flex gap='3' p={3} alignItems='center'>
+               <div className='user-avatar' {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <Avatar size='full' src={user.picturePath} alt='Photo' loading='lazy' />
-                  <span className='edit-av edit' onClick={open}>
-                     {isLoadingUploadPicture ? <Spinner /> : <i className='material-icons'>edit</i>}
-                  </span>
+                  <div className='file-img'>
+                     <Avatar size='lg' src={user.picturePath} name={user.name} alt='Photo' loading='lazy' />
+                     <span className='edit-av edit' onClick={open}>
+                        {isLoadingUploadPicture ? <Spinner /> : <i className='material-icons'>edit</i>}
+                     </span>
+                  </div>
                </div>
 
                <Box>
@@ -91,17 +85,17 @@ const UserMenu = () => {
                      {user.name}
                   </Heading>
                   <Text color='black' fontSize='xs'>
-                     {user.username}
+                     @{user.username}
                   </Text>
                </Box>
             </Flex>
             <MenuDivider />
-            <Flex flexDirection='column' p={2}>
-               <Button onClick={deleteUser} colorScheme='red' variant='ghost'>
+            <Flex className='menu-list' flexDirection='column' p={3}>
+               <Button onClick={deleteUser} colorScheme='red'>
                   Delete user
                </Button>
-               <Button onClick={signOut} colorScheme='red' variant='ghost'>
-                  Sign Out
+               <Button onClick={signOut} colorScheme='gray'>
+                  Sign out
                </Button>
             </Flex>
          </MenuList>

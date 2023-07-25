@@ -71,8 +71,6 @@ const EditEmployeeModal = ({ show, onHide }) => {
       },
       enabled: !!show,
    });
-   console.log('data', data);
-   console.log('show', show);
 
    const { getRootProps, getInputProps, open } = useDropzone({
       accept: {
