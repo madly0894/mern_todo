@@ -236,9 +236,6 @@ button.delete-action {
                right: 0;
                z-index: 9;
                border-radius: 100%;
-               &[aria-disabled="true"] {
-                  pointer-events: none;
-               }
                .chakra-spinner {
                   width: 16px;
                   height: 16px;

@@ -66,6 +66,11 @@
                   z-index: 9;
                   border-radius: 100%;
                   background-color: #26c0d3;
+                  .chakra-spinner {
+                     width: 16px;
+                     height: 16px;
+                     color: $white-color;
+                  }
                   .material-icons {
                      color: $white-color;
                   }
